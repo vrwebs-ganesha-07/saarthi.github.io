@@ -1,0 +1,25 @@
+# DayCare Backend — Python Dependencies
+# ========================================
+# Install with:  pip install -r requirements.txt
+#
+# Python >= 3.8 required
+
+# Web framework
+flask>=2.3.0
+
+# Cross-origin requests (from the frontend HTML pages)
+flask-cors>=4.0.0
+
+# Database ORM (optional — we use raw sqlite3, but included for future use)
+flask-sqlalchemy>=3.0.0
+
+# Production WSGI server (use instead of Flask dev server in production)
+gunicorn>=21.0.0
+
+# ── STDLIB MODULES USED (no install needed) ───────────────────────
+# sqlite3   — database
+# hashlib   — password hashing
+# uuid      — unique ID generation
+# datetime  — timestamps
+# json      — request/response parsing
+# os, sys   — file paths
