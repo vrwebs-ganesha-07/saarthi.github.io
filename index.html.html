@@ -1,0 +1,3022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DayCare – Your Daily Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF8F0;
+    --card: #FFFFFF;
+    --primary: #E07B39;
+    --primary-light: #F5A96A;
+    --primary-soft: #FDE8D5;
+    --green: #4CAF7C;
+    --green-soft: #D8F5E6;
+    --blue: #4A90D9;
+    --blue-soft: #D6EAFA;
+    --red: #E53935;
+    --red-soft: #FDEAEA;
+    --text: #2C2C2C;
+    --text-muted: #777;
+    --border: #EFE3D6;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.14);
+    --radius: 20px;
+    --font-size-base: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: var(--font-size-base);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- TOP BAR ---- */
+  .topbar {
+    background: var(--primary);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 15px rgba(224,123,57,0.4);
+  }
+  .topbar-left h1 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+  .topbar-left p {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-family: 'Lora', serif;
+    font-style: italic;
+  }
+  #live-time {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 30px;
+  }
+
+  /* ---- EMERGENCY BUTTON ---- */
+  .emergency-wrap {
+    padding: 20px 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  .emergency-btn {
+    background: var(--red);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 50px;
+    padding: 20px 50px;
+    width: 100%;
+    max-width: 500px;
+    cursor: pointer;
+    box-shadow: 0 6px 25px rgba(229,57,53,0.45);
+    animation: pulse-red 2.5s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .emergency-btn:active {
+    transform: scale(0.97);
+  }
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 6px 25px rgba(229,57,53,0.45); }
+    50% { box-shadow: 0 6px 40px rgba(229,57,53,0.75); }
+  }
+  .emergency-icon { font-size: 1.6rem; }
+
+  /* ---- EMERGENCY MODAL ---- */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white;
+    border-radius: var(--radius);
+    padding: 36px 28px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    animation: pop-in 0.25s ease;
+  }
+  @keyframes pop-in {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal h2 { font-size: 1.6rem; font-weight: 900; color: var(--red); margin-bottom: 10px; }
+  .modal p { color: var(--text-muted); font-size: 1rem; margin-bottom: 24px; line-height: 1.6; }
+  .modal-contact {
+    background: var(--red-soft);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .modal-contact div { font-weight: 700; font-size: 1.05rem; color: var(--red); margin-bottom: 4px; }
+  .modal-contact a { color: var(--text); font-size: 1.2rem; font-weight: 800; text-decoration: none; display: block; }
+  .modal-close {
+    background: var(--border);
+    color: var(--text);
+    border: none;
+    border-radius: 14px;
+    padding: 14px 30px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* ---- SECTIONS ---- */
+  .section {
+    padding: 20px 20px 0;
+  }
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+  }
+
+  /* ---- REMINDER CARDS ---- */
+  .reminder-list { display: flex; flex-direction: column; gap: 12px; }
+  .reminder-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .reminder-card.done {
+    background: var(--green-soft);
+    border-color: var(--green);
+    opacity: 0.7;
+  }
+  .reminder-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .reminder-info { flex: 1; }
+  .reminder-name { font-size: 1.1rem; font-weight: 800; }
+  .reminder-time { font-size: 0.9rem; color: var(--text-muted); margin-top: 2px; }
+  .reminder-check {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+  }
+  .reminder-card.done .reminder-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  /* ADD REMINDER */
+  .add-reminder-btn {
+    background: none;
+    border: 2.5px dashed var(--primary-light);
+    border-radius: var(--radius);
+    padding: 16px;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .add-reminder-btn:hover { background: var(--primary-soft); }
+
+  .add-form {
+    display: none;
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-top: 10px;
+    gap: 12px;
+    flex-direction: column;
+  }
+  .add-form.active { display: flex; }
+  .add-form label { font-weight: 700; font-size: 0.95rem; color: var(--text-muted); }
+  .add-form input, .add-form select {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    transition: border 0.2s;
+  }
+  .add-form input:focus, .add-form select:focus { border-color: var(--primary); }
+  .add-form-row { display: flex; gap: 10px; }
+  .add-form-row input, .add-form-row select { flex: 1; }
+  .btn-save {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-save:hover { background: var(--primary-light); }
+
+  /* ---- ACTIVITY SECTION ---- */
+  .activity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .activity-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+  }
+  .activity-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .activity-card.active-act { border-color: var(--primary); background: var(--primary-soft); }
+  .activity-emoji { font-size: 2.4rem; display: block; margin-bottom: 8px; }
+  .activity-name { font-size: 1rem; font-weight: 800; }
+  .activity-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; }
+
+  /* ACTIVITY PANEL */
+  .activity-panel {
+    display: none;
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-top: 14px;
+  }
+  .activity-panel.active { display: block; animation: pop-in 0.2s ease; }
+  .activity-panel h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 14px; }
+
+  /* Breathing */
+  .breath-circle {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: var(--blue-soft);
+    border: 5px solid var(--blue);
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 800; color: var(--blue);
+    transition: transform 4s ease-in-out;
+  }
+  .breath-circle.inhale { transform: scale(1.45); background: #c5dff8; }
+  .breath-circle.exhale { transform: scale(1); }
+  .breath-btn {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Quiz */
+  .quiz-q { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+  }
+  .quiz-opt.correct { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+  .quiz-opt.wrong { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+  .quiz-result { font-weight: 800; font-size: 1rem; margin-top: 12px; display: none; }
+  .quiz-next {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* Memory Game */
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .mem-card {
+    aspect-ratio: 1;
+    background: var(--primary);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+  }
+  .mem-card.flipped { background: white; border: 2px solid var(--border); }
+  .mem-card.matched { background: var(--green-soft); border: 2px solid var(--green); }
+  .mem-status { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); }
+  .mem-restart {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  /* Daily Quote */
+  .quote-card {
+    background: linear-gradient(135deg, #fff5eb, #ffe4cc);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    border-left: 5px solid var(--primary);
+  }
+  .quote-text {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .quote-author { font-weight: 700; font-size: 0.9rem; color: var(--primary); }
+  .quote-refresh {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 14px;
+    display: inline-block;
+  }
+
+  /* ---- WEATHER MOOD WIDGET ---- */
+  .mood-strip {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mood-label { font-size: 1rem; font-weight: 800; }
+  .mood-label span { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+  .mood-emojis { display: flex; gap: 10px; }
+  .mood-emoji-btn {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 2.5px solid var(--border);
+    background: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mood-emoji-btn:hover, .mood-emoji-btn.selected { background: var(--primary-soft); border-color: var(--primary); transform: scale(1.15); }
+
+  /* ---- LEARN & GROW SECTION ---- */
+  --purple: #7C5CBF;
+  --purple-soft: #EDE5F8;
+  --teal: #2B8A8A;
+  --teal-soft: #D4F0F0;
+  --gold: #C68B00;
+  --gold-soft: #FFF3C4;
+  --rose: #C0415A;
+  --rose-soft: #FCDDE5;
+
+  /* Tab strip */
+  .learn-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .learn-tabs::-webkit-scrollbar { display: none; }
+  .learn-tab {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    border-radius: 30px;
+    border: 2.5px solid var(--border);
+    background: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .learn-tab.active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+
+  /* Tab panels */
+  .learn-panel { display: none; margin-top: 16px; }
+  .learn-panel.active { display: block; animation: pop-in 0.2s ease; }
+
+  /* Lesson card */
+  .lesson-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 2px solid transparent;
+    transition: all 0.25s;
+  }
+  .lesson-header {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+  }
+  .lesson-icon-wrap {
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .lesson-meta { flex: 1; }
+  .lesson-title { font-size: 1.05rem; font-weight: 800; }
+  .lesson-subtitle { font-size: 0.83rem; color: var(--text-muted); margin-top: 2px; }
+  .lesson-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.25s;
+    color: var(--text-muted);
+  }
+  .lesson-card.open .lesson-arrow { transform: rotate(90deg); }
+  .lesson-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1.5px solid var(--border);
+    padding-top: 16px;
+  }
+  .lesson-card.open .lesson-body { display: block; }
+  .lesson-body p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .lesson-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .lesson-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { font-size: 0.93rem; line-height: 1.5; }
+  .tip-box {
+    background: var(--primary-soft);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 12px 12px 0;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-top: 12px;
+  }
+  .tip-box strong { color: var(--primary); }
+
+  /* Health tracker cards */
+  .health-tracker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ht-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .ht-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .ht-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); }
+  .ht-value { font-size: 1.4rem; font-weight: 900; color: var(--text); margin-top: 4px; }
+  .ht-input {
+    width: 100%;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 6px;
+    outline: none;
+  }
+  .ht-input:focus { border-color: var(--primary); }
+
+  /* Finance tracker */
+  .finance-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .finance-row input, .finance-row select {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+  }
+  .finance-row input:focus, .finance-row select:focus { border-color: var(--primary); }
+  .finance-add-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .finance-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .finance-item {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+  }
+  .finance-item .fi-name { font-weight: 700; }
+  .finance-item .fi-amount { font-weight: 900; }
+  .finance-item.expense .fi-amount { color: var(--red); }
+  .finance-item.income .fi-amount { color: var(--green); }
+  .finance-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+  .fs-item { text-align: center; }
+  .fs-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
+  .fs-value { font-size: 1.2rem; font-weight: 900; margin-top: 4px; }
+
+  /* Spiritual */
+  .mantra-card {
+    background: linear-gradient(135deg, #fff9e6, #ffefc2);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    text-align: center;
+    border: 2px solid #f0d080;
+    margin-bottom: 14px;
+  }
+  .mantra-symbol { font-size: 2.5rem; margin-bottom: 8px; }
+  .mantra-text {
+    font-family: 'Lora', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #6B4700;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .mantra-meaning { font-size: 0.9rem; color: #9A7020; font-style: italic; }
+  .mantra-nav { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+  .mantra-btn {
+    background: #C68B00;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* Hobby cards */
+  .hobby-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .hobby-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 18px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+  .hobby-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .hobby-card.active-hob { border-color: var(--primary); background: var(--primary-soft); }
+  .hobby-emoji { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .hobby-name { font-size: 0.95rem; font-weight: 800; }
+  .hobby-detail {
+    display: none;
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-top: 14px;
+  }
+  .hobby-detail.active { display: block; animation: pop-in 0.2s ease; }
+  .hobby-detail h4 { font-size: 1.1rem; font-weight: 900; margin-bottom: 12px; }
+
+  /* ---- BOTTOM SPACER ---- */
+  .spacer { height: 100px; }
+
+  /* ---- BOTTOM NAV ---- */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 2px solid var(--border);
+    display: flex;
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+  }
+  .bnav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    gap: 4px;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .bnav-btn .bnav-icon { font-size: 1.45rem; transition: transform 0.2s; }
+  .bnav-btn.active { color: var(--primary); }
+  .bnav-btn.active .bnav-icon { transform: scale(1.15); }
+  .bnav-btn.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 0 0 4px 4px;
+  }
+
+  /* ---- SCREENS ---- */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    background: var(--bg);
+    padding-bottom: 90px;
+  }
+  .screen.active { display: block; }
+  #homeScreen { display: block; }
+
+  /* ---- PROFILE SCREEN ---- */
+  .profile-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #C4591A 100%);
+    padding: 36px 24px 28px;
+    text-align: center;
+    color: white;
+    position: relative;
+  }
+  .profile-avatar {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    border: 4px solid rgba(255,255,255,0.6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem;
+    margin: 0 auto 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+  }
+  .profile-avatar:hover { background: rgba(255,255,255,0.35); }
+  .profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
+  .profile-name { font-size: 1.55rem; font-weight: 900; margin-bottom: 4px; }
+  .profile-sub { font-size: 0.9rem; opacity: 0.85; font-family: 'Lora', serif; font-style: italic; }
+  .profile-edit-chip {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .profile-edit-chip:hover { background: rgba(255,255,255,0.3); }
+
+  /* Profile edit form */
+  .profile-edit-form {
+    display: none;
+    background: white;
+    margin: 16px 20px 0;
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    animation: pop-in 0.2s ease;
+  }
+  .profile-edit-form.active { display: block; }
+  .pef-label { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); margin-bottom: 5px; }
+  .pef-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    margin-bottom: 14px;
+    transition: border 0.2s;
+  }
+  .pef-input:focus { border-color: var(--primary); }
+  .pef-row { display: flex; gap: 10px; }
+  .pef-row > div { flex: 1; }
+  .pef-save {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  /* Settings groups */
+  .settings-group {
+    margin: 20px 20px 0;
+  }
+  .settings-group-title {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+  .settings-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .setting-row {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    gap: 16px;
+    border-bottom: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-row:hover { background: var(--bg); }
+  .setting-icon {
+    width: 46px; height: 46px;
+    border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .setting-info { flex: 1; }
+  .setting-name { font-size: 1rem; font-weight: 800; }
+  .setting-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+  .setting-control { flex-shrink: 0; }
+
+  /* Toggle switch */
+  .toggle-switch {
+    position: relative;
+    width: 52px; height: 28px;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: #ccc;
+    border-radius: 28px;
+    transition: background 0.25s;
+    cursor: pointer;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 20px; width: 20px;
+    left: 4px; bottom: 4px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.25s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  input:checked + .toggle-slider { background: var(--green); }
+  input:checked + .toggle-slider::before { transform: translateX(24px); }
+
+  /* Font size buttons */
+  .font-btns { display: flex; gap: 6px; }
+  .font-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .font-btn.selected { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+
+  /* Notification sub-panel */
+  .notif-panel {
+    display: none;
+    background: var(--bg);
+    padding: 16px 20px 20px;
+    border-top: 1.5px solid var(--border);
+    animation: pop-in 0.2s ease;
+  }
+  .notif-panel.active { display: block; }
+  .notif-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-label { font-size: 0.95rem; font-weight: 700; }
+  .notif-sub { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Emergency contacts manager */
+  .ec-panel {
+    display: none;
+    background: var(--bg);
+    padding: 16px 20px 20px;
+    border-top: 1.5px solid var(--border);
+    animation: pop-in 0.2s ease;
+  }
+  .ec-panel.active { display: block; }
+  .ec-contact-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .ec-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .ec-info { flex: 1; }
+  .ec-name { font-weight: 800; font-size: 0.95rem; }
+  .ec-phone { font-size: 0.85rem; color: var(--text-muted); }
+  .ec-relation { font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-top: 1px; }
+  .ec-del {
+    background: var(--red-soft);
+    color: var(--red);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .ec-add-form {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .ec-add-form input, .ec-add-form select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: 11px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border 0.2s;
+  }
+  .ec-add-form input:focus, .ec-add-form select:focus { border-color: var(--primary); }
+  .ec-save-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* Voice panel */
+  .voice-panel {
+    display: none;
+    background: var(--bg);
+    padding: 16px 20px 20px;
+    border-top: 1.5px solid var(--border);
+    animation: pop-in 0.2s ease;
+  }
+  .voice-panel.active { display: block; }
+  .voice-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 50px;
+    margin: 10px 0;
+  }
+  .wave-bar {
+    width: 5px;
+    border-radius: 3px;
+    background: var(--primary);
+    animation: wave-bounce 1.2s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1) { height: 12px; animation-delay: 0s; }
+  .wave-bar:nth-child(2) { height: 28px; animation-delay: 0.1s; }
+  .wave-bar:nth-child(3) { height: 40px; animation-delay: 0.2s; }
+  .wave-bar:nth-child(4) { height: 28px; animation-delay: 0.3s; }
+  .wave-bar:nth-child(5) { height: 12px; animation-delay: 0.4s; }
+  @keyframes wave-bounce {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+  }
+  .voice-status {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .voice-speak-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: all 0.2s;
+  }
+  .voice-speak-btn.speaking { background: var(--red); animation: pulse-red 1s infinite; }
+  .voice-commands {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .vc-chip {
+    background: white;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vc-chip span { font-size: 1rem; }
+
+  /* High contrast override */
+  body.high-contrast {
+    --bg: #000000;
+    --card: #1A1A1A;
+    --text: #FFFFFF;
+    --text-muted: #AAAAAA;
+    --border: #444444;
+    --primary-soft: #3D2200;
+  }
+  body.high-contrast .topbar { background: #1A1A1A; box-shadow: 0 3px 15px rgba(0,0,0,0.8); }
+  body.high-contrast .bottom-nav { background: #1A1A1A; border-top-color: #444; }
+  body.high-contrast .learn-tab { background: #1A1A1A; color: #AAA; }
+  body.high-contrast .lesson-body, body.high-contrast .notif-panel, body.high-contrast .ec-panel { background: #111; }
+
+  /* ---- TOAST ---- */
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    z-index: 999;
+    transition: transform 0.35s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>☀️ DayCare</h1>
+    <p>Your daily companion</p>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="connBadge" style="font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.2);color:rgba(255,255,255,.85)">⏳</span>
+    <div id="live-time">--:--</div>
+    <button id="navAuthBtn" onclick="openAuthModal('login')" style="white-space:nowrap;height:38px;padding:0 14px;border-radius:20px;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.6);font-size:.82rem;font-weight:800;color:white;cursor:pointer;" title="Sign In">🔑 Sign In</button>
+  </div>
+</div>
+
+<!-- HOME SCREEN WRAPPER -->
+<div class="screen active" id="homeScreen">
+
+<!-- EMERGENCY BUTTON -->
+<div class="emergency-wrap">
+  <button class="emergency-btn" onclick="openEmergency()">
+    <span class="emergency-icon">🆘</span> EMERGENCY HELP
+  </button>
+</div>
+
+<!-- MOOD CHECK-IN -->
+<div class="section" style="margin-top:20px;">
+  <div class="mood-strip">
+    <div class="mood-label">
+      How are you feeling?
+      <span>Tap to let us know</span>
+    </div>
+    <div class="mood-emojis">
+      <button class="mood-emoji-btn" onclick="selectMood(this,'😊')">😊</button>
+      <button class="mood-emoji-btn" onclick="selectMood(this,'😐')">😐</button>
+      <button class="mood-emoji-btn" onclick="selectMood(this,'😔')">😔</button>
+      <button class="mood-emoji-btn" onclick="selectMood(this,'😴')">😴</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMINDERS -->
+<div class="section" style="margin-top:24px;">
+  <div class="section-title">📋 Today's Reminders</div>
+  <div class="reminder-list" id="reminderList"></div>
+  <button class="add-reminder-btn" onclick="toggleAddForm()">＋ Add Reminder</button>
+  <div class="add-form" id="addForm">
+    <label>Task Name</label>
+    <input type="text" id="taskName" placeholder="e.g. Take blood pressure medicine" />
+    <div class="add-form-row">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <label>Time</label>
+        <input type="time" id="taskTime" />
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <label>Icon</label>
+        <select id="taskIcon">
+          <option value="💊">💊 Medicine</option>
+          <option value="🍎">🍎 Meal</option>
+          <option value="🚶">🚶 Walk</option>
+          <option value="💧">💧 Water</option>
+          <option value="📞">📞 Call</option>
+          <option value="🧘">🧘 Exercise</option>
+          <option value="📖">📖 Read</option>
+          <option value="🛁">🛁 Bath</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-save" onclick="addReminder()">Save Reminder ✓</button>
+  </div>
+</div>
+
+<!-- DAILY QUOTE -->
+<div class="section" style="margin-top:24px;">
+  <div class="section-title">💬 Quote of the Day</div>
+  <div class="quote-card">
+    <div class="quote-text" id="quoteText"></div>
+    <div class="quote-author" id="quoteAuthor"></div>
+    <button class="quote-refresh" onclick="newQuote()">Next Quote ↻</button>
+  </div>
+</div>
+
+<!-- ACTIVITIES -->
+<div class="section" style="margin-top:24px;">
+  <div class="section-title">🎯 Engagement Activities</div>
+  <div class="activity-grid">
+    <div class="activity-card" onclick="openActivity('breathing')">
+      <span class="activity-emoji">🌬️</span>
+      <div class="activity-name">Breathing</div>
+      <div class="activity-desc">Calm your mind</div>
+    </div>
+    <div class="activity-card" onclick="openActivity('quiz')">
+      <span class="activity-emoji">🧠</span>
+      <div class="activity-name">Brain Quiz</div>
+      <div class="activity-desc">Stay sharp!</div>
+    </div>
+    <div class="activity-card" onclick="openActivity('memory')">
+      <span class="activity-emoji">🃏</span>
+      <div class="activity-name">Memory Game</div>
+      <div class="activity-desc">Match pairs</div>
+    </div>
+    <div class="activity-card" onclick="openActivity('stretch')">
+      <span class="activity-emoji">🧘</span>
+      <div class="activity-name">Stretches</div>
+      <div class="activity-desc">5-min routine</div>
+    </div>
+  </div>
+
+  <!-- Breathing Panel -->
+  <div class="activity-panel" id="panel-breathing">
+    <h3>🌬️ Guided Breathing</h3>
+    <div class="breath-circle" id="breathCircle">Tap Start</div>
+    <div style="text-align:center;color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;" id="breathLabel">Relax and breathe naturally</div>
+    <button class="breath-btn" id="breathBtn" onclick="toggleBreath()">▶ Start</button>
+  </div>
+
+  <!-- Quiz Panel -->
+  <div class="activity-panel" id="panel-quiz">
+    <h3>🧠 Brain Quiz</h3>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-options" id="quizOpts"></div>
+    <div class="quiz-result" id="quizResult"></div>
+    <button class="quiz-next" id="quizNext" onclick="nextQuiz()">Next Question →</button>
+  </div>
+
+  <!-- Memory Panel -->
+  <div class="activity-panel" id="panel-memory">
+    <h3>🃏 Memory Game</h3>
+    <div class="memory-grid" id="memGrid"></div>
+    <div class="mem-status" id="memStatus">Match all pairs to win!</div>
+    <button class="mem-restart" onclick="initMemory()">↺ New Game</button>
+  </div>
+
+  <!-- Stretch Panel -->
+  <div class="activity-panel" id="panel-stretch">
+    <h3>🧘 5-Minute Stretch Routine</h3>
+    <div id="stretchList" style="display:flex;flex-direction:column;gap:12px;"></div>
+  </div>
+</div>
+
+<!-- LEARN & GROW -->
+<div class="section" style="margin-top:28px;">
+  <div class="section-title">📚 Learn & Grow</div>
+
+  <!-- Tab strip -->
+  <div class="learn-tabs">
+    <button class="learn-tab active" onclick="switchLearnTab('health', this)">❤️ Health</button>
+    <button class="learn-tab" onclick="switchLearnTab('digital', this)">📱 Digital Skills</button>
+    <button class="learn-tab" onclick="switchLearnTab('hobby', this)">🎨 Hobbies</button>
+    <button class="learn-tab" onclick="switchLearnTab('finance', this)">💰 Finance</button>
+    <button class="learn-tab" onclick="switchLearnTab('spiritual', this)">🙏 Spiritual</button>
+  </div>
+
+  <!-- ===== HEALTH PANEL ===== -->
+  <div class="learn-panel active" id="lpanel-health">
+
+    <!-- Daily Health Tracker -->
+    <div class="health-tracker">
+      <div class="ht-card">
+        <div class="ht-icon">💧</div>
+        <div class="ht-label">Water (glasses)</div>
+        <div class="ht-value" id="htWater">0</div>
+        <div style="display:flex;gap:6px;margin-top:8px;justify-content:center;">
+          <button onclick="changeHt('htWater',-1)" style="background:var(--border);border:none;border-radius:8px;padding:6px 12px;font-size:1.1rem;cursor:pointer;font-weight:800;">−</button>
+          <button onclick="changeHt('htWater',1)" style="background:var(--blue);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:1.1rem;cursor:pointer;font-weight:800;">+</button>
+        </div>
+      </div>
+      <div class="ht-card">
+        <div class="ht-icon">🚶</div>
+        <div class="ht-label">Steps today</div>
+        <div class="ht-value" id="htSteps">0</div>
+        <input class="ht-input" type="number" placeholder="Enter steps" onchange="document.getElementById('htSteps').textContent=this.value||0" />
+      </div>
+      <div class="ht-card">
+        <div class="ht-icon">🩺</div>
+        <div class="ht-label">Blood Pressure</div>
+        <input class="ht-input" type="text" placeholder="120/80" id="htBP" />
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Normal: 120/80</div>
+      </div>
+      <div class="ht-card">
+        <div class="ht-icon">😴</div>
+        <div class="ht-label">Sleep (hours)</div>
+        <div class="ht-value" id="htSleep">0</div>
+        <div style="display:flex;gap:6px;margin-top:8px;justify-content:center;">
+          <button onclick="changeHt('htSleep',-1)" style="background:var(--border);border:none;border-radius:8px;padding:6px 12px;font-size:1.1rem;cursor:pointer;font-weight:800;">−</button>
+          <button onclick="changeHt('htSleep',1)" style="background:var(--purple);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:1.1rem;cursor:pointer;font-weight:800;">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Tips accordion -->
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FDEAEA;">🫀</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Heart Health Tips</div>
+          <div class="lesson-subtitle">Simple habits for a healthy heart</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>Keeping your heart healthy becomes more important as we age. Small daily habits make a big difference.</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Walk for at least 30 minutes every day — even a slow, comfortable pace helps.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Eat plenty of fruits, vegetables, and whole grains. Reduce salt and oily fried foods.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Avoid smoking and limit alcohol. Both put extra stress on your heart.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Check your blood pressure regularly. A normal reading is around 120/80 mmHg.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Laughter is great medicine! Watching a funny show or talking with friends can lower stress hormones naturally.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D8F5E6;">🥗</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Nutrition for Seniors</div>
+          <div class="lesson-subtitle">What to eat and what to avoid</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>As we age, our bodies need slightly different nutrition. Here's what matters most:</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text"><strong>Calcium & Vitamin D</strong> — Drink milk, eat curd, and sit in morning sunlight to keep bones strong.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text"><strong>Fibre</strong> — Eat whole grains, dals, and vegetables to support digestion and prevent constipation.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text"><strong>Protein</strong> — Include eggs, paneer, legumes, or fish at least once a day to maintain muscle strength.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text"><strong>Hydration</strong> — Drink 6–8 glasses of water daily. Seniors often feel less thirsty but still need fluids.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Eat smaller meals more frequently rather than one or two large meals. It's easier on digestion and keeps energy steady.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D6EAFA;">💊</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Managing Medicines Safely</div>
+          <div class="lesson-subtitle">How to take medicines correctly</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Always take medicines at the same time each day — set a reminder on this app!</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Never skip doses without consulting your doctor, even if you feel better.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Keep a written list of all your medicines and share it with family members.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Never take someone else's medicine, even if the symptoms seem similar.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Use a weekly pill organiser (available at any pharmacy) to easily track which medicines you've taken each day.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIGITAL SKILLS PANEL ===== -->
+  <div class="learn-panel" id="lpanel-digital">
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D6EAFA;">📱</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Using WhatsApp</div>
+          <div class="lesson-subtitle">Send messages, photos & voice notes</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>WhatsApp is one of the easiest ways to stay connected with family and friends. Here's how to use it step by step:</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text"><strong>Send a message:</strong> Open WhatsApp → tap a contact name → type your message in the box at the bottom → tap the green send (➤) button.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text"><strong>Send a voice note:</strong> Instead of typing, hold the 🎤 microphone icon and speak. Release to send automatically.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text"><strong>Send a photo:</strong> Tap the paperclip 📎 icon → choose "Gallery" → select your photo → tap send.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text"><strong>Video call:</strong> Open a contact → tap the video camera icon 📹 at the top right to start a video call.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> You can increase the text size on WhatsApp! Go to Settings → Chats → Font Size → choose Large.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#EDE5F8;">🔒</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Staying Safe Online</div>
+          <div class="lesson-subtitle">Avoid scams & protect yourself</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>Online scams often target seniors. Learn to spot them and stay safe:</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text"><strong>Never share OTPs or passwords</strong> with anyone — not even people claiming to be from your bank, government, or phone company.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text"><strong>Beware of "too good to be true" offers.</strong> If someone promises free prizes, lottery winnings, or asks you to send money first — it's a scam.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text"><strong>Only download apps from official stores</strong> (Play Store or App Store). Avoid clicking links in unknown messages.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">If something feels suspicious, call a trusted family member before doing anything.</div></div>
+        </div>
+        <div class="tip-box"><strong>🚨 Remember:</strong> Real banks and government agencies NEVER ask for your PIN or OTP over the phone or in a message.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D8F5E6;">🎥</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Video Calling (Zoom / Meet)</div>
+          <div class="lesson-subtitle">See and talk to loved ones</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Open the Zoom or Google Meet app. Ask a family member to send you a "meeting link" via WhatsApp.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Tap the link they send you. The app will open automatically.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Tap "Join" and allow access to your camera and microphone when asked.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">To mute/unmute yourself, tap the microphone icon at the bottom. To turn your camera on/off, tap the camera icon.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Prop your phone against a book or use a phone stand so you don't have to hold it during the call. Make sure the light is in front of your face, not behind you!</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FDE8D5;">🛒</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Online Shopping Basics</div>
+          <div class="lesson-subtitle">Shop safely from home</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Only shop on trusted apps like Amazon, Flipkart, or Big Basket. Look for the padlock 🔒 symbol in the address bar.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Search for what you need, read the product description and star ratings carefully.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Choose "Cash on Delivery" (COD) if you're not comfortable with online payment — you pay only when the item arrives.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Keep the order confirmation message until your product arrives safely.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HOBBIES PANEL ===== -->
+  <div class="learn-panel" id="lpanel-hobby">
+    <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">Hobbies keep the mind active, reduce loneliness, and bring joy. Explore an activity below:</p>
+    <div class="hobby-grid" id="hobbyGrid">
+      <div class="hobby-card" onclick="openHobby('drawing', this)">
+        <span class="hobby-emoji">✏️</span>
+        <div class="hobby-name">Drawing & Sketching</div>
+      </div>
+      <div class="hobby-card" onclick="openHobby('gardening', this)">
+        <span class="hobby-emoji">🌱</span>
+        <div class="hobby-name">Gardening</div>
+      </div>
+      <div class="hobby-card" onclick="openHobby('cooking', this)">
+        <span class="hobby-emoji">🍳</span>
+        <div class="hobby-name">Cooking & Recipes</div>
+      </div>
+      <div class="hobby-card" onclick="openHobby('writing', this)">
+        <span class="hobby-emoji">📝</span>
+        <div class="hobby-name">Journal Writing</div>
+      </div>
+      <div class="hobby-card" onclick="openHobby('music', this)">
+        <span class="hobby-emoji">🎵</span>
+        <div class="hobby-name">Music & Singing</div>
+      </div>
+      <div class="hobby-card" onclick="openHobby('craft', this)">
+        <span class="hobby-emoji">🧶</span>
+        <div class="hobby-name">Knitting & Crafts</div>
+      </div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-drawing">
+      <h4>✏️ Getting Started with Drawing</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">You need only a pencil and paper to begin. Start by drawing simple shapes — circles, squares, leaves.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Try drawing things around you — a cup, a flower, a shoe. Don't worry about perfection.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Practice for 15 minutes a day. You'll be amazed how quickly you improve!</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Benefit:</strong> Drawing reduces anxiety, improves focus, and is a wonderful way to express emotions without words.</div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-gardening">
+      <h4>🌱 Start Your Home Garden</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Start small — even a single pot on a balcony or windowsill works. Try herbs like tulsi, mint, or coriander.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Water plants in the morning and make sure they get 2–3 hours of sunlight daily.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Use kitchen compost (vegetable peels) as natural fertiliser once a month.</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Benefit:</strong> Gardening is a gentle exercise that improves mood, reduces stress, and gives a sense of achievement.</div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-cooking">
+      <h4>🍳 Explore New Recipes</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Pick one new dish to try each week — perhaps a healthy snack, a new chutney, or a traditional dessert.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Ask grandchildren or family for their favourite recipe — cooking together is a wonderful bonding activity.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Write down your own family recipes so they can be passed down to future generations.</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Tip:</strong> Cooking activates multiple senses and is great for memory and cognitive function.</div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-writing">
+      <h4>📝 Keep a Daily Journal</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Each morning, write 3 things you are grateful for. This is proven to improve happiness and mental health.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Write about memories, life lessons, stories from your youth — your wisdom is precious.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Don't worry about spelling or grammar. This journal is just for you.</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Benefit:</strong> Journal writing improves memory, reduces anxiety, and creates a beautiful family legacy.</div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-music">
+      <h4>🎵 Music & Singing</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Listen to your favourite old songs each day — music from your youth evokes happy memories and lifts mood.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Try humming or singing along. Even light vocalization has been shown to reduce stress and blood pressure.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Consider learning a simple instrument like a harmonium, flute, or ukulele — many free lessons are available on YouTube.</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Benefit:</strong> Music stimulates the brain, improves memory, and is one of the most powerful mood boosters known.</div>
+    </div>
+
+    <div class="hobby-detail" id="hobby-craft">
+      <h4>🧶 Knitting & Crafts</h4>
+      <div class="lesson-steps">
+        <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Start with simple projects — a small scarf or a dishcloth. Buy beginner yarn and needles from any craft store.</div></div>
+        <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Watch simple tutorial videos on YouTube. Search "knitting for beginners India" for easy guides in Hindi.</div></div>
+        <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Other easy crafts: paper folding (origami), making rangoli, stitching, or making greeting cards for family.</div></div>
+      </div>
+      <div class="tip-box"><strong>💡 Benefit:</strong> Crafts improve hand-eye coordination, reduce arthritis pain, and give a deep sense of accomplishment.</div>
+    </div>
+  </div>
+
+  <!-- ===== FINANCE PANEL ===== -->
+  <div class="learn-panel" id="lpanel-finance">
+    <!-- Monthly Tracker -->
+    <div style="background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;">
+      <div style="font-weight:800;font-size:1rem;margin-bottom:14px;">📒 Monthly Expense Tracker</div>
+      <div class="finance-row">
+        <input type="text" id="fiName" placeholder="e.g. Medicine, Groceries" />
+        <input type="number" id="fiAmt" placeholder="Amount ₹" />
+        <select id="fiType">
+          <option value="expense">📤 Expense</option>
+          <option value="income">📥 Income</option>
+        </select>
+        <button class="finance-add-btn" onclick="addFinanceItem()">+</button>
+      </div>
+      <div class="finance-list" id="financeList"></div>
+      <div class="finance-summary" id="financeSummary" style="display:none;">
+        <div class="fs-item"><div class="fs-label">Total Income</div><div class="fs-value" id="fsIncome" style="color:var(--green)">₹0</div></div>
+        <div class="fs-item"><div class="fs-label">Total Spent</div><div class="fs-value" id="fsExpense" style="color:var(--red)">₹0</div></div>
+        <div class="fs-item"><div class="fs-label">Balance</div><div class="fs-value" id="fsBalance">₹0</div></div>
+      </div>
+    </div>
+
+    <!-- Finance tips accordion -->
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FFF3C4;">🏦</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Understanding Bank Accounts</div>
+          <div class="lesson-subtitle">Savings, FD, and pension basics</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text"><strong>Savings Account:</strong> Your regular account for daily use. Keep only 2–3 months' expenses here.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text"><strong>Fixed Deposit (FD):</strong> A safe way to earn more interest than a savings account. Lock money for a fixed period (6 months to 5 years).</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text"><strong>Senior Citizen Savings Scheme (SCSS):</strong> A government scheme offering higher interest rates specially for people aged 60+.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text"><strong>Pension/EPF:</strong> If you receive a pension, ensure it's directly deposited into your bank account and review your passbook monthly.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Tip:</strong> Nominate a trusted family member as a nominee in all your bank accounts and insurance policies so there are no complications later.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D8F5E6;">💳</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Using UPI & Digital Payments</div>
+          <div class="lesson-subtitle">Pay safely without cash</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>UPI (Unified Payments Interface) apps like PhonePe, Google Pay, and Paytm let you pay and receive money instantly.</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Open your UPI app → tap "Send Money" → scan the shop's QR code or enter the phone number.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Enter the amount, double-check it, then enter your 4 or 6-digit UPI PIN to confirm.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Always verify the recipient name shown before paying. Never share your UPI PIN with anyone.</div></div>
+        </div>
+        <div class="tip-box"><strong>🚨 Safety:</strong> No one can steal money just by scanning a QR code — you always need to enter your PIN. But never enter your PIN for "receiving" money — that's always a scam.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FDEAEA;">📄</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Will & Nominations</div>
+          <div class="lesson-subtitle">Plan ahead for peace of mind</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">A <strong>Will</strong> is a document that states who should receive your assets (property, money, jewellery) after you. It prevents family disputes.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">You can write a simple Will yourself on ₹500 stamp paper, signed by 2 witnesses. It does not need to be registered, but registration makes it stronger.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Make sure all your bank accounts, insurance, and property documents have a <strong>Nominee</strong> listed.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Store important documents (Aadhar, PAN, land papers, Will) in a safe place and tell a trusted family member where they are.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SPIRITUAL PANEL ===== -->
+  <div class="learn-panel" id="lpanel-spiritual">
+
+    <!-- Daily Mantra -->
+    <div class="mantra-card">
+      <div class="mantra-symbol" id="mantraSymbol">🕉️</div>
+      <div class="mantra-text" id="mantraText"></div>
+      <div class="mantra-meaning" id="mantraMeaning"></div>
+      <div class="mantra-nav">
+        <button class="mantra-btn" onclick="prevMantra()">← Previous</button>
+        <button class="mantra-btn" onclick="nextMantra()">Next →</button>
+      </div>
+    </div>
+
+    <!-- Spiritual accordion -->
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FFF3C4;">🧘</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Meditation for Beginners</div>
+          <div class="lesson-subtitle">Find inner peace in 10 minutes</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Sit comfortably in a chair or on the floor with your back straight. You do not need to sit cross-legged.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Close your eyes gently and take 3 slow, deep breaths. Let your body relax with each exhale.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Focus your attention on your breath. Notice it going in and out. When thoughts wander, gently bring attention back.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Start with just 5–10 minutes each morning. Gradually increase as it becomes comfortable.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Benefit:</strong> Daily meditation reduces blood pressure, improves sleep, decreases anxiety, and cultivates a deep sense of peace and contentment.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#EDE5F8;">🙏</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">The Power of Gratitude</div>
+          <div class="lesson-subtitle">A spiritual practice for happiness</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>Gratitude is one of the most powerful spiritual practices, found in every major tradition. It shifts our attention from what we lack to what we have.</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Each morning, name 3 things you're thankful for — your health, your family, the sunrise, a warm meal.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Express gratitude directly to people around you. A simple "thank you" and a smile creates deep bonds.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">In difficult moments, try to find one small thing that is still good. This builds resilience over time.</div></div>
+        </div>
+        <div class="tip-box"><strong>📖 Wisdom:</strong> "When you are grateful, fear disappears and abundance appears." — Tony Robbins</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#D8F5E6;">🕯️</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Hindu Puja Basics</div>
+          <div class="lesson-subtitle">Simple daily morning ritual</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text"><strong>Wake up and cleanse:</strong> Begin with a bath or at least washing your face and hands before puja.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text"><strong>Light a diya:</strong> Light a ghee or oil lamp — it symbolises the removal of darkness and ignorance.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text"><strong>Offer flowers:</strong> Place fresh flowers or tulsi leaves before your deity as a mark of love and devotion.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text"><strong>Chant or pray:</strong> Recite a favourite mantra, bhajan, or simply speak from your heart. God listens to sincerity, not perfection.</div></div>
+        </div>
+        <div class="tip-box"><strong>💡 Remember:</strong> The purpose of puja is not ritual performance but developing a loving, personal relationship with the Divine.</div>
+      </div>
+    </div>
+
+    <div class="lesson-card" onclick="toggleLesson(this)">
+      <div class="lesson-header">
+        <div class="lesson-icon-wrap" style="background:#FDE8D5;">📿</div>
+        <div class="lesson-meta">
+          <div class="lesson-title">Japa Meditation (Mantra Chanting)</div>
+          <div class="lesson-subtitle">The practice of repetitive chanting</div>
+        </div>
+        <div class="lesson-arrow">›</div>
+      </div>
+      <div class="lesson-body">
+        <p>Japa means the silent or spoken repetition of God's name or a sacred mantra. It is one of the simplest yet most powerful spiritual practices.</p>
+        <div class="lesson-steps">
+          <div class="lesson-step"><div class="step-num">1</div><div class="step-text">Choose a mantra that resonates with you — "Om Namah Shivaya", "Jai Shri Ram", "Om", or any name of God you love.</div></div>
+          <div class="lesson-step"><div class="step-num">2</div><div class="step-text">Use a mala (108-bead rosary) to count repetitions. One full round = 108 repetitions.</div></div>
+          <div class="lesson-step"><div class="step-num">3</div><div class="step-text">Sit quietly, close your eyes, and chant the mantra mentally or softly. Focus your mind on its meaning.</div></div>
+          <div class="lesson-step"><div class="step-num">4</div><div class="step-text">Even 10–15 minutes of daily Japa can bring profound peace, clarity, and spiritual progress.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- end homeScreen -->
+
+<!-- ===================== PROFILE SCREEN ===================== -->
+<div class="screen" id="profileScreen">
+
+  <!-- Hero -->
+  <div class="profile-hero">
+    <div class="profile-avatar" onclick="triggerAvatarUpload()" id="profileAvatar" title="Tap to change photo">
+      <span id="avatarEmoji">👴</span>
+      <img id="avatarImg" />
+    </div>
+    <input type="file" id="avatarUpload" accept="image/*" style="display:none" onchange="handleAvatarChange(event)" />
+    <div class="profile-name" id="displayName">Your Name</div>
+    <div class="profile-sub" id="displayAge">Age · City</div>
+    <div class="profile-edit-chip" onclick="toggleProfileEdit()">✏️ Edit Profile</div>
+  </div>
+
+  <!-- Profile Edit Form -->
+  <div class="profile-edit-form" id="profileEditForm">
+    <div class="pef-row">
+      <div>
+        <div class="pef-label">First Name</div>
+        <input class="pef-input" id="pefFirst" placeholder="e.g. Ramesh" />
+      </div>
+      <div>
+        <div class="pef-label">Last Name</div>
+        <input class="pef-input" id="pefLast" placeholder="e.g. Sharma" />
+      </div>
+    </div>
+    <div class="pef-row">
+      <div>
+        <div class="pef-label">Age</div>
+        <input class="pef-input" id="pefAge" type="number" placeholder="e.g. 67" />
+      </div>
+      <div>
+        <div class="pef-label">City</div>
+        <input class="pef-input" id="pefCity" placeholder="e.g. Mumbai" />
+      </div>
+    </div>
+    <div class="pef-label">Health Condition (optional)</div>
+    <input class="pef-input" id="pefHealth" placeholder="e.g. Diabetes, Hypertension" />
+    <div class="pef-label">Blood Group</div>
+    <input class="pef-input" id="pefBlood" placeholder="e.g. O+" />
+    <button class="pef-save" onclick="saveProfile()">Save Profile ✓</button>
+  </div>
+
+  <!-- ACCESSIBILITY -->
+  <div class="settings-group">
+    <div class="settings-group-title">♿ Accessibility</div>
+    <div class="settings-card">
+
+      <!-- Voice Assistance -->
+      <div class="setting-row" onclick="toggleVoicePanel()">
+        <div class="setting-icon" style="background:#D6EAFA;">🔊</div>
+        <div class="setting-info">
+          <div class="setting-name">Voice Assistance</div>
+          <div class="setting-desc">Read content aloud using text-to-speech</div>
+        </div>
+        <div class="setting-control" style="font-size:1rem;color:var(--text-muted);" id="voiceArrow">›</div>
+      </div>
+      <div class="voice-panel" id="voicePanel">
+        <div class="voice-wave" id="voiceWave" style="display:none;">
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+        <div class="voice-status" id="voiceStatus">Tap below to hear today's summary read aloud</div>
+        <button class="voice-speak-btn" id="voiceSpeakBtn" onclick="toggleVoiceRead()">🔊 Read Aloud</button>
+        <div class="voice-commands">
+          <div style="font-size:0.82rem;font-weight:900;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:6px;margin-bottom:4px;">Things Claude can read out</div>
+          <div class="vc-chip" onclick="speakText('Your reminders for today are: Morning Medicine at 8 AM, Breakfast at 9 AM, Morning Walk at 7:30 AM, and Drink Water at 11 AM.')"><span>📋</span> Today's Reminders</div>
+          <div class="vc-chip" onclick="speakText(document.getElementById(\'quoteText\').textContent + \' \' + document.getElementById(\'quoteAuthor\').textContent)"><span>💬</span> Quote of the Day</div>
+          <div class="vc-chip" onclick="speakText('In case of emergency, call 1 1 2 for ambulance. Stay calm and speak clearly.')"><span>🆘</span> Emergency Instructions</div>
+          <div class="vc-chip" onclick="speakText(document.getElementById(\'mantraText\').textContent + \'. Meaning: \' + document.getElementById(\'mantraMeaning\').textContent)"><span>🕉️</span> Today's Mantra</div>
+        </div>
+      </div>
+
+      <!-- Font Size -->
+      <div class="setting-row" style="cursor:default;">
+        <div class="setting-icon" style="background:#D8F5E6;">🔤</div>
+        <div class="setting-info">
+          <div class="setting-name">Font Size</div>
+          <div class="setting-desc" id="fontSizeLabel">Current: Medium</div>
+        </div>
+        <div class="setting-control">
+          <div class="font-btns">
+            <button class="font-btn" onclick="setFontSize('small','Small')" title="Small" style="font-size:0.7rem;">A</button>
+            <button class="font-btn selected" onclick="setFontSize('medium','Medium')" title="Medium" style="font-size:0.9rem;">A</button>
+            <button class="font-btn" onclick="setFontSize('large','Large')" title="Large" style="font-size:1.1rem;">A</button>
+            <button class="font-btn" onclick="setFontSize('xlarge','X-Large')" title="X-Large" style="font-size:1.25rem;">A</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- High Contrast -->
+      <div class="setting-row" style="cursor:default;">
+        <div class="setting-icon" style="background:#2C2C2C;">🌓</div>
+        <div class="setting-info">
+          <div class="setting-name">High Contrast Mode</div>
+          <div class="setting-desc">Dark background for easier reading</div>
+        </div>
+        <div class="setting-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="contrastToggle" onchange="toggleContrast()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="settings-group">
+    <div class="settings-group-title">🔔 Notifications</div>
+    <div class="settings-card">
+      <div class="setting-row" onclick="toggleNotifPanel()">
+        <div class="setting-icon" style="background:#FDE8D5;">🔔</div>
+        <div class="setting-info">
+          <div class="setting-name">Notification Settings</div>
+          <div class="setting-desc">Control what alerts you receive</div>
+        </div>
+        <div class="setting-control" style="font-size:1rem;color:var(--text-muted);" id="notifArrow">›</div>
+      </div>
+      <div class="notif-panel" id="notifPanel">
+        <div class="notif-item">
+          <div><div class="notif-label">💊 Medicine Reminders</div><div class="notif-sub">Alert 10 min before dose time</div></div>
+          <label class="toggle-switch"><input type="checkbox" checked onchange="notifChange(this,'Medicine reminders')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-item">
+          <div><div class="notif-label">🚶 Exercise Reminder</div><div class="notif-sub">Daily 7:30 AM walk prompt</div></div>
+          <label class="toggle-switch"><input type="checkbox" checked onchange="notifChange(this,'Exercise reminder')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-item">
+          <div><div class="notif-label">💧 Water Reminder</div><div class="notif-sub">Every 2 hours during the day</div></div>
+          <label class="toggle-switch"><input type="checkbox" onchange="notifChange(this,'Water reminder')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-item">
+          <div><div class="notif-label">🧘 Activity Reminder</div><div class="notif-sub">Daily activity nudge at 4 PM</div></div>
+          <label class="toggle-switch"><input type="checkbox" checked onchange="notifChange(this,'Activity reminder')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-item">
+          <div><div class="notif-label">💬 Daily Quote</div><div class="notif-sub">Motivational quote each morning</div></div>
+          <label class="toggle-switch"><input type="checkbox" checked onchange="notifChange(this,'Daily quote')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-item" style="border:none;">
+          <div><div class="notif-label">🕉️ Spiritual Reminder</div><div class="notif-sub">Morning puja/mantra prompt at 6 AM</div></div>
+          <label class="toggle-switch"><input type="checkbox" onchange="notifChange(this,'Spiritual reminder')"/><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMERGENCY CONTACTS MANAGER -->
+  <div class="settings-group">
+    <div class="settings-group-title">🆘 Emergency</div>
+    <div class="settings-card">
+      <div class="setting-row" onclick="toggleEcPanel()">
+        <div class="setting-icon" style="background:#FDEAEA;">📱</div>
+        <div class="setting-info">
+          <div class="setting-name">Emergency Contacts</div>
+          <div class="setting-desc" id="ecCountLabel">3 contacts saved</div>
+        </div>
+        <div class="setting-control" style="font-size:1rem;color:var(--text-muted);" id="ecArrow">›</div>
+      </div>
+      <div class="ec-panel" id="ecPanel">
+        <div id="ecContactsList"></div>
+        <div class="ec-add-form">
+          <div style="font-weight:800;font-size:0.9rem;margin-bottom:10px;color:var(--primary);">➕ Add New Contact</div>
+          <input type="text" id="ecName" placeholder="Contact Name" />
+          <input type="tel" id="ecPhone" placeholder="Phone Number" />
+          <select id="ecRelation">
+            <option value="">Select Relationship</option>
+            <option>Son</option><option>Daughter</option><option>Spouse</option>
+            <option>Sibling</option><option>Friend</option><option>Doctor</option>
+            <option>Neighbour</option><option>Caregiver</option>
+          </select>
+          <button class="ec-save-btn" onclick="addEmergencyContact()">Save Contact</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP INFO -->
+  <div class="settings-group">
+    <div class="settings-group-title">ℹ️ App Info</div>
+    <div class="settings-card">
+      <div class="setting-row" style="cursor:default;">
+        <div class="setting-icon" style="background:var(--primary-soft);">☀️</div>
+        <div class="setting-info">
+          <div class="setting-name">DayCare</div>
+          <div class="setting-desc">Version 2.0 · Made with ❤️ for seniors</div>
+        </div>
+      </div>
+      <div class="setting-row" id="authProfileRow" style="cursor:pointer;" onclick="handleAuthRowTap()">
+        <div class="setting-icon" style="background:#D8F5E6;">👤</div>
+        <div class="setting-info">
+          <div class="setting-name" id="authRowTitle">Sign In / Register</div>
+          <div class="setting-desc" id="authRowSub">Save your data to the cloud</div>
+        </div>
+        <div class="setting-control" style="font-size:.85rem;font-weight:800;color:var(--primary);" id="authRowBtn">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div><!-- end profileScreen -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="switchScreen('home')">
+    <span class="bnav-icon">🏠</span>Home
+  </button>
+  <button class="bnav-btn" id="bnav-reminders" onclick="switchScreen('home'); setTimeout(()=>document.getElementById('reminderList').scrollIntoView({behavior:'smooth'}),200)">
+    <span class="bnav-icon">📋</span>Tasks
+  </button>
+  <button class="bnav-btn" id="bnav-learn" onclick="switchScreen('home'); setTimeout(()=>document.querySelector('.learn-tabs').scrollIntoView({behavior:'smooth'}),200)">
+    <span class="bnav-icon">📚</span>Learn
+  </button>
+  <button class="bnav-btn" id="bnav-profile" onclick="switchScreen('profile')">
+    <span class="bnav-icon">👤</span>Profile
+  </button>
+</nav>
+
+<!-- AUTH MODAL (Login / Register) -->
+<div class="modal-overlay" id="authModal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal" style="max-width:400px;padding:30px 28px 24px">
+    <h2 style="margin-bottom:6px">☀️ Welcome to DayCare</h2>
+    <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:20px">Sign in to save your reminders &amp; contacts across devices</p>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;border:2px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px">
+      <button id="authTab-login"    class="auth-tab active"  onclick="switchAuthTab('login')"    style="flex:1;padding:11px;border:none;font-family:Nunito,sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;background:var(--primary);color:white;transition:all .2s">🔑 Log In</button>
+      <button id="authTab-register" class="auth-tab"         onclick="switchAuthTab('register')" style="flex:1;padding:11px;border:none;font-family:Nunito,sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;background:white;color:var(--text-muted);transition:all .2s">✨ Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="authForm-login" class="auth-form" style="display:flex;flex-direction:column;gap:12px">
+      <input id="loginName" type="text" placeholder="Your Name (e.g. Ramesh)" style="padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:1rem;outline:none" autocomplete="name" />
+      <input id="loginPass" type="password" placeholder="Password (min 4 characters)" style="padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:1rem;outline:none" autocomplete="current-password" />
+      <button id="loginBtn" onclick="loginUser()" style="padding:15px;border-radius:14px;border:none;background:var(--primary);color:white;font-family:Nunito,sans-serif;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 4px 16px rgba(224,123,57,.38)">🔑 Log In</button>
+      <p style="text-align:center;font-size:.82rem;color:var(--text-muted)">No account yet? <a href="#" onclick="switchAuthTab('register');return false" style="color:var(--primary);font-weight:800">Create one →</a></p>
+    </div>
+
+    <!-- Register Form -->
+    <div id="authForm-register" class="auth-form" style="display:none;flex-direction:column;gap:12px">
+      <input id="regName" type="text" placeholder="Your Name *" style="padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:1rem;outline:none" />
+      <input id="regPass" type="password" placeholder="Choose a Password * (min 4 chars)" style="padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:1rem;outline:none" />
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <input id="regAge"  type="number" placeholder="Age" style="padding:13px 14px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:.95rem;outline:none" />
+        <input id="regCity" type="text"   placeholder="City" style="padding:13px 14px;border-radius:12px;border:2px solid var(--border);font-family:Nunito,sans-serif;font-size:.95rem;outline:none" />
+      </div>
+      <button id="regBtn" onclick="registerUser()" style="padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-family:Nunito,sans-serif;font-size:1rem;font-weight:900;cursor:pointer;box-shadow:0 4px 16px rgba(76,175,124,.38)">✅ Create Account</button>
+      <p style="text-align:center;font-size:.82rem;color:var(--text-muted)">Already registered? <a href="#" onclick="switchAuthTab('login');return false" style="color:var(--primary);font-weight:800">Log in →</a></p>
+    </div>
+
+    <button onclick="closeAuthModal()" style="display:block;width:100%;margin-top:10px;padding:11px;border-radius:12px;border:2px solid var(--border);background:none;font-family:Nunito,sans-serif;font-size:.9rem;font-weight:700;color:var(--text-muted);cursor:pointer">Continue without account (local only)</button>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal">
+  <div class="modal">
+    <h2>🆘 Emergency Contacts</h2>
+    <p>Stay calm. Help is available. Tap a number to call immediately.</p>
+    <div class="modal-contact">
+      <div>🏥 Ambulance / Emergency Services</div>
+      <a href="tel:112">📞 112</a>
+    </div>
+    <div class="modal-contact">
+      <div>👨‍👩‍👧 Family Member</div>
+      <a href="tel:+919876543210">📞 +91 98765 43210</a>
+    </div>
+    <div class="modal-contact">
+      <div>👩‍⚕️ Your Doctor</div>
+      <a href="tel:+919123456789">📞 +91 91234 56789</a>
+    </div>
+    <button class="modal-close" onclick="closeEmergency()">I'm OK — Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   DAYCARE — BACKEND API LAYER
+   Connects all frontend features to the Flask + SQLite backend.
+   Falls back gracefully to local state when offline or not logged in.
+   Backend URL: http://localhost:5000
+═══════════════════════════════════════════════════════════════════ */
+
+const API = 'http://localhost:5000/api';
+let AUTH_TOKEN = localStorage.getItem('daycare_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('daycare_user') || 'null');
+let isOnline = false;  // becomes true after first successful API call
+
+// Core API fetch wrapper with auth header + error handling
+async function apiFetch(path, opts = {}) {
+  try {
+    const res = await fetch(API + path, {
+      ...opts,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(AUTH_TOKEN ? { 'X-Auth-Token': AUTH_TOKEN } : {}),
+        ...(opts.headers || {})
+      }
+    });
+    const data = await res.json();
+    if (!isOnline) { isOnline = true; updateConnBadge(true); }
+    return data;
+  } catch (e) {
+    if (isOnline) { isOnline = false; updateConnBadge(false); }
+    return { success: false, message: 'Offline — using local data', offline: true };
+  }
+}
+
+function updateConnBadge(online) {
+  const b = document.getElementById('connBadge');
+  if (!b) return;
+  b.textContent = online ? '🟢 Live' : '🔴 Offline';
+  b.style.background = online ? '#D8F5E6' : '#FDEAEA';
+  b.style.color = online ? '#1A7040' : '#D43030';
+}
+
+/* ─── AUTH HELPERS ─────────────────────────────────────────────── */
+function saveSession(token, user) {
+  AUTH_TOKEN = token;
+  currentUser = user;
+  localStorage.setItem('daycare_token', token);
+  localStorage.setItem('daycare_user', JSON.stringify(user));
+}
+function clearSession() {
+  AUTH_TOKEN = null; currentUser = null;
+  localStorage.removeItem('daycare_token');
+  localStorage.removeItem('daycare_user');
+}
+function isLoggedIn() { return !!AUTH_TOKEN && !!currentUser; }
+
+/* ─── LOGIN / REGISTER ─────────────────────────────────────────── */
+async function loginUser() {
+  const name     = document.getElementById('loginName').value.trim();
+  const password = document.getElementById('loginPass').value;
+  if (!name || !password) { showToast('⚠️ Please enter your name and password'); return; }
+  setAuthBtnLoading('loginBtn', true);
+  const res = await apiFetch('/auth/login', { method:'POST', body: JSON.stringify({ name, password }) });
+  setAuthBtnLoading('loginBtn', false);
+  if (res.success) {
+    saveSession(res.data.token, res.data.user);
+    showToast('👋 Welcome back, ' + res.data.user.name + '!');
+    closeAuthModal();
+    await loadAllData();
+  } else {
+    showToast('❌ ' + res.message);
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+async function registerUser() {
+  const name     = document.getElementById('regName').value.trim();
+  const password = document.getElementById('regPass').value;
+  const age      = document.getElementById('regAge').value;
+  const city     = document.getElementById('regCity').value.trim();
+  if (!name || !password) { showToast('⚠️ Please enter name and password'); return; }
+  if (password.length < 4) { showToast('⚠️ Password must be at least 4 characters'); return; }
+  setAuthBtnLoading('regBtn', true);
+  const res = await apiFetch('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, password, age: age ? +age : null, city })
+  });
+  setAuthBtnLoading('regBtn', false);
+  if (res.success) {
+    saveSession(res.data.token, res.data.user);
+    showToast('🎉 Account created! Welcome, ' + res.data.user.name + '!');
+    closeAuthModal();
+    await loadAllData();
+  } else {
+    showToast('❌ ' + res.message);
+  }
+}
+
+async function logoutUser() {
+  await apiFetch('/auth/logout', { method:'POST' });
+  clearSession();
+  reminders = [];
+  ecContacts = [...DEFAULT_CONTACTS];
+  renderReminders();
+  renderEcContacts();
+  updateProfileUI(null);
+  showToast('👋 Logged out. See you soon!');
+  updateNavAuth();
+}
+
+function setAuthBtnLoading(id, loading) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? '⏳ Please wait…' : (id === 'loginBtn' ? '🔑 Log In' : '✅ Create Account');
+}
+
+/* ─── AUTH MODAL ───────────────────────────────────────────────── */
+function openAuthModal(tab = 'login') {
+  document.getElementById('authModal').classList.add('active');
+  switchAuthTab(tab);
+}
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('active');
+}
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.style.display = 'none');
+  document.getElementById('authTab-' + tab).classList.add('active');
+  document.getElementById('authForm-' + tab).style.display = 'flex';
+}
+function updateNavAuth() {
+  const loggedIn = isLoggedIn();
+  const authEl = document.getElementById('navAuthBtn');
+  if (authEl) {
+    authEl.textContent = loggedIn ? '👤 ' + (currentUser?.name || 'Me') : '🔑 Sign In';
+    authEl.onclick = loggedIn ? () => switchScreen('profile') : () => openAuthModal('login');
+  }
+}
+
+/* ─── LOAD ALL DATA FROM BACKEND ────────────────────────────────── */
+async function loadAllData() {
+  if (!isLoggedIn()) return;
+  updateNavAuth();
+  await Promise.all([
+    loadProfile(),
+    loadReminders(),
+    loadContacts(),
+    loadHealthToday()
+  ]);
+}
+
+/* ─── PROFILE ───────────────────────────────────────────────────── */
+async function loadProfile() {
+  if (!isLoggedIn()) return;
+  const res = await apiFetch('/users/me');
+  if (res.success) {
+    currentUser = res.data.user;
+    localStorage.setItem('daycare_user', JSON.stringify(currentUser));
+    updateProfileUI(currentUser);
+    // Apply saved settings
+    if (currentUser.font_size) applyFontSize(currentUser.font_size);
+    if (currentUser.high_contrast) {
+      document.body.classList.toggle('high-contrast', !!currentUser.high_contrast);
+      const ct = document.getElementById('contrastToggle');
+      if (ct) ct.checked = !!currentUser.high_contrast;
+    }
+  }
+}
+
+function updateProfileUI(user) {
+  if (!user) {
+    document.getElementById('displayName').textContent = 'Your Name';
+    document.getElementById('displayAge').textContent = 'Age · City';
+    document.getElementById('avatarEmoji').textContent = '👴';
+    return;
+  }
+  document.getElementById('displayName').textContent = user.name || 'Your Name';
+  const agePart  = user.age  ? user.age + ' yrs'   : '';
+  const cityPart = user.city ? user.city : '';
+  const bloodPart= user.blood_group ? ' · ' + user.blood_group : '';
+  document.getElementById('displayAge').textContent =
+    [agePart, cityPart].filter(Boolean).join(' · ') + bloodPart || 'Tap Edit to add details';
+  document.getElementById('avatarEmoji').textContent = user.avatar || '👴';
+  // Pre-fill edit form
+  document.getElementById('pefFirst').value  = user.name || '';
+  document.getElementById('pefAge').value    = user.age  || '';
+  document.getElementById('pefCity').value   = user.city || '';
+  document.getElementById('pefHealth').value = user.health_notes || '';
+  document.getElementById('pefBlood').value  = user.blood_group  || '';
+}
+
+async function saveProfile() {
+  const name   = document.getElementById('pefFirst').value.trim();
+  const age    = document.getElementById('pefAge').value.trim();
+  const city   = document.getElementById('pefCity').value.trim();
+  const health = document.getElementById('pefHealth').value.trim();
+  const blood  = document.getElementById('pefBlood').value.trim();
+  if (!name) { showToast('⚠️ Please enter your name'); return; }
+
+  if (isLoggedIn()) {
+    const res = await apiFetch('/users/me', {
+      method: 'PUT',
+      body: JSON.stringify({ name, age: age ? +age : null, city, health_notes: health, blood_group: blood })
+    });
+    if (res.success) {
+      currentUser = res.data.user;
+      localStorage.setItem('daycare_user', JSON.stringify(currentUser));
+      updateProfileUI(currentUser);
+      updateNavAuth();
+      showToast('✅ Profile saved to cloud!');
+    } else {
+      showToast('❌ ' + res.message);
+      return;
+    }
+  } else {
+    // Local only
+    profileData = { first: name, age, city, health, blood };
+    document.getElementById('displayName').textContent = name;
+    document.getElementById('displayAge').textContent =
+      [age ? age + ' yrs' : '', city].filter(Boolean).join(' · ') + (blood ? ' · ' + blood : '');
+    showToast('✅ Profile saved (locally)');
+  }
+  document.getElementById('profileEditForm').classList.remove('active');
+}
+
+/* ─── REMINDERS ─────────────────────────────────────────────────── */
+async function loadReminders() {
+  if (!isLoggedIn()) return;
+  const res = await apiFetch('/reminders/');
+  if (res.success) {
+    reminders = res.data.reminders.map(r => ({
+      id:   r.id,
+      name: r.name,
+      time: r.time,
+      icon: r.icon || '📋',
+      done: !!r.done,
+      category: r.category,
+      _backendId: r.id
+    }));
+    renderReminders();
+  }
+}
+
+async function toggleReminder(id) {
+  const r = reminders.find(x => x.id === id);
+  if (!r) return;
+
+  if (isLoggedIn() && typeof r.id === 'string') {
+    const res = await apiFetch(`/reminders/${r.id}/done`, { method: 'PATCH' });
+    if (res.success) {
+      r.done = !!res.data.reminder.done;
+      renderReminders();
+      showToast(r.done ? `✅ "${r.name}" marked done!` : `↩ "${r.name}" unmarked`);
+      return;
+    }
+  }
+  // Local fallback
+  r.done = !r.done;
+  renderReminders();
+  showToast(r.done ? `✅ "${r.name}" marked done!` : `↩ "${r.name}" unmarked`);
+}
+
+async function addReminder() {
+  const name = document.getElementById('taskName').value.trim();
+  const time = document.getElementById('taskTime').value;
+  const icon = document.getElementById('taskIcon').value;
+  if (!name || !time) { showToast('⚠️ Please fill in all fields'); return; }
+
+  if (isLoggedIn()) {
+    const res = await apiFetch('/reminders/', {
+      method: 'POST',
+      body: JSON.stringify({ name, time, icon, category: 'other', repeat: 'daily', priority: 'normal' })
+    });
+    if (res.success) {
+      const r = res.data.reminder;
+      reminders.push({ id: r.id, name: r.name, time: r.time, icon: r.icon, done: false });
+      renderReminders();
+      document.getElementById('taskName').value = '';
+      document.getElementById('taskTime').value = '';
+      document.getElementById('addForm').classList.remove('active');
+      showToast('✅ Reminder saved to cloud!');
+      return;
+    }
+  }
+  // Local fallback
+  reminders.push({ id: Date.now(), name, time, icon, done: false });
+  renderReminders();
+  document.getElementById('taskName').value = '';
+  document.getElementById('taskTime').value = '';
+  document.getElementById('addForm').classList.remove('active');
+  showToast('✅ Reminder added!');
+}
+
+/* ─── EMERGENCY CONTACTS ─────────────────────────────────────────── */
+async function loadContacts() {
+  if (!isLoggedIn()) return;
+  const res = await apiFetch('/contacts/');
+  if (res.success && res.data.contacts.length) {
+    ecContacts = res.data.contacts.map(c => ({
+      _id:      c.id,
+      name:     c.name,
+      phone:    c.phone,
+      relation: c.relation,
+      avatar:   c.avatar
+    }));
+    renderEcContacts();
+    syncEmergencyModal();
+  }
+}
+
+async function addEmergencyContact() {
+  const name     = document.getElementById('ecName').value.trim();
+  const phone    = document.getElementById('ecPhone').value.trim();
+  const relation = document.getElementById('ecRelation').value;
+  if (!name || !phone) { showToast('⚠️ Please enter name and phone'); return; }
+
+  const relEmojis = { 'Son':'👨','Daughter':'👩','Spouse':'💑','Sibling':'🧑','Friend':'😊','Doctor':'👩‍⚕️','Neighbour':'🏠','Caregiver':'🤝','' :'👤' };
+
+  if (isLoggedIn()) {
+    const res = await apiFetch('/contacts/', {
+      method: 'POST',
+      body: JSON.stringify({ name, phone, relation })
+    });
+    if (res.success) {
+      const c = res.data.contact;
+      ecContacts.push({ _id: c.id, name: c.name, phone: c.phone, relation: c.relation, avatar: c.avatar });
+      document.getElementById('ecName').value = '';
+      document.getElementById('ecPhone').value = '';
+      document.getElementById('ecRelation').value = '';
+      renderEcContacts();
+      showToast('✅ ' + name + ' saved to cloud contacts!');
+      return;
+    }
+  }
+  // Local fallback
+  ecContacts.push({ name, phone, relation, avatar: relEmojis[relation] || '👤' });
+  document.getElementById('ecName').value = '';
+  document.getElementById('ecPhone').value = '';
+  document.getElementById('ecRelation').value = '';
+  renderEcContacts();
+  showToast('✅ ' + name + ' added!');
+}
+
+async function deleteEc(i) {
+  if (ecContacts.length <= 1) { showToast('⚠️ Keep at least one contact!'); return; }
+  const c = ecContacts[i];
+  if (isLoggedIn() && c._id) {
+    const res = await apiFetch('/contacts/' + c._id, { method: 'DELETE' });
+    if (res.success) {
+      const name = c.name;
+      ecContacts.splice(i, 1);
+      renderEcContacts();
+      showToast('🗑 ' + name + ' removed from cloud!');
+      return;
+    }
+  }
+  // Local fallback
+  const name = c.name;
+  ecContacts.splice(i, 1);
+  renderEcContacts();
+  showToast('🗑 ' + name + ' removed');
+}
+
+/* ─── HEALTH LOG ────────────────────────────────────────────────── */
+async function loadHealthToday() {
+  if (!isLoggedIn()) return;
+  const res = await apiFetch('/health/');
+  if (res.success && res.data.log) {
+    const log = res.data.log;
+    htVals.htWater = log.water_glasses || 0;
+    htVals.htSleep = log.sleep_hours   || 0;
+    const wEl = document.getElementById('htWater');
+    const sEl = document.getElementById('htSleep');
+    if (wEl) wEl.textContent = htVals.htWater;
+    if (sEl) sEl.textContent = htVals.htSleep;
+  }
+}
+
+async function saveHealthLog() {
+  if (!isLoggedIn()) return;
+  const res = await apiFetch('/health/', {
+    method: 'POST',
+    body: JSON.stringify({
+      water_glasses: htVals.htWater,
+      sleep_hours:   htVals.htSleep
+    })
+  });
+  if (res.success) showToast('💧 Health log saved to cloud!');
+}
+
+/* ─── SETTINGS SYNC ─────────────────────────────────────────────── */
+async function syncSettingsToBackend(settings) {
+  if (!isLoggedIn()) return;
+  await apiFetch('/users/me/settings', { method: 'PUT', body: JSON.stringify(settings) });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ORIGINAL APP CODE (now wired to backend above)
+═══════════════════════════════════════════════════════════════════ */
+
+// ---- CLOCK ----
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('live-time').textContent = h + ':' + m;
+}
+updateClock(); setInterval(updateClock, 1000);
+
+// ---- TOAST ----
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ---- EMERGENCY ----
+function openEmergency() { document.getElementById('emergencyModal').classList.add('active'); }
+function closeEmergency() { document.getElementById('emergencyModal').classList.remove('active'); }
+
+// ---- MOOD ----
+function selectMood(btn, emoji) {
+  document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const msgs = {'😊':'Great! Keep smiling! 🌟','😐':'That\'s okay, take it one step at a time.','😔':'We\'re here for you. Try a breathing exercise!','😴':'Rest well — you deserve it!'};
+  showToast(msgs[emoji]);
+  if (isLoggedIn()) apiFetch('/health/', { method:'POST', body: JSON.stringify({ mood: emoji }) });
+}
+
+// ---- REMINDERS (local state — kept in sync with backend above) ----
+let reminders = [
+  { id:1, name:'Morning Medicine', time:'08:00', icon:'💊', done:false },
+  { id:2, name:'Breakfast', time:'09:00', icon:'🍎', done:false },
+  { id:3, name:'Morning Walk', time:'07:30', icon:'🚶', done:false },
+  { id:4, name:'Drink Water', time:'11:00', icon:'💧', done:false },
+];
+
+function renderReminders() {
+  const list = document.getElementById('reminderList');
+  const sorted = [...reminders].sort((a,b) => a.time.localeCompare(b.time));
+  list.innerHTML = sorted.map(r => `
+    <div class="reminder-card ${r.done?'done':''}" onclick="toggleReminder(${r.id})">
+      <div class="reminder-icon" style="background:${r.done?'#D8F5E6':'#FDE8D5'}">${r.icon}</div>
+      <div class="reminder-info">
+        <div class="reminder-name">${r.name}</div>
+        <div class="reminder-time">⏰ ${formatTime(r.time)}</div>
+      </div>
+      <div class="reminder-check">${r.done?'✓':''}</div>
+    </div>`).join('');
+}
+
+function formatTime(t) {
+  const [h,m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 || 12;
+  return `${hr}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function toggleAddForm() {
+  const f = document.getElementById('addForm');
+  f.classList.toggle('active');
+}
+
+renderReminders();
+
+// ---- QUOTES ----
+const quotes = [
+  { text: "Every day is a gift. Open it with gratitude.", author: "— Unknown" },
+  { text: "You don't stop laughing when you grow old; you grow old when you stop laughing.", author: "— George Bernard Shaw" },
+  { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "— Chinese Proverb" },
+  { text: "Count your age by friends, not years. Count your life by smiles, not tears.", author: "— John Lennon" },
+  { text: "Health is not just about what you're eating. It's also about what you're thinking and saying.", author: "— Unknown" },
+  { text: "A calm mind brings inner strength and self-confidence.", author: "— Dalai Lama" },
+  { text: "Small steps every day lead to big results.", author: "— Unknown" },
+];
+let quoteIdx = 0;
+function newQuote() {
+  quoteIdx = (quoteIdx + 1) % quotes.length;
+  document.getElementById('quoteText').textContent = '"' + quotes[quoteIdx].text + '"';
+  document.getElementById('quoteAuthor').textContent = quotes[quoteIdx].author;
+}
+document.getElementById('quoteText').textContent = '"' + quotes[0].text + '"';
+document.getElementById('quoteAuthor').textContent = quotes[0].author;
+
+// ---- ACTIVITIES ----
+let currentActivity = null;
+function openActivity(name) {
+  if (currentActivity === name) {
+    document.querySelectorAll('.activity-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('active-act'));
+    currentActivity = null;
+    return;
+  }
+  document.querySelectorAll('.activity-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.activity-card').forEach(c => c.classList.remove('active-act'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active-act');
+  currentActivity = name;
+  if (name === 'quiz') loadQuiz();
+  if (name === 'memory') initMemory();
+  if (name === 'stretch') loadStretches();
+  document.getElementById('panel-' + name).scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ---- BREATHING ----
+let breathRunning = false, breathInterval;
+function toggleBreath() {
+  breathRunning = !breathRunning;
+  const btn = document.getElementById('breathBtn');
+  if (breathRunning) {
+    btn.textContent = '■ Stop';
+    doBreathCycle();
+  } else {
+    clearTimeout(breathInterval);
+    btn.textContent = '▶ Start';
+    const c = document.getElementById('breathCircle');
+    c.className = 'breath-circle';
+    c.textContent = 'Tap Start';
+    document.getElementById('breathLabel').textContent = 'Relax and breathe naturally';
+  }
+}
+function doBreathCycle() {
+  if (!breathRunning) return;
+  const c = document.getElementById('breathCircle');
+  const lbl = document.getElementById('breathLabel');
+  c.textContent = 'Inhale...'; c.className = 'breath-circle inhale';
+  lbl.textContent = 'Breathe in slowly for 4 seconds';
+  breathInterval = setTimeout(() => {
+    if (!breathRunning) return;
+    c.textContent = 'Hold'; c.className = 'breath-circle';
+    lbl.textContent = 'Hold your breath for 4 seconds';
+    breathInterval = setTimeout(() => {
+      if (!breathRunning) return;
+      c.textContent = 'Exhale...'; c.className = 'breath-circle exhale';
+      lbl.textContent = 'Breathe out slowly for 4 seconds';
+      breathInterval = setTimeout(() => { if (breathRunning) doBreathCycle(); }, 4000);
+    }, 4000);
+  }, 4000);
+}
+
+// ---- QUIZ ----
+const quizData = [
+  { q: "Which planet is closest to the Sun?", opts: ["Venus", "Mercury", "Mars", "Earth"], ans: 1 },
+  { q: "How many months have 28 days?", opts: ["1", "2", "6", "All 12"], ans: 3 },
+  { q: "What color do you get mixing red and white?", opts: ["Orange", "Purple", "Pink", "Maroon"], ans: 2 },
+  { q: "What is the national bird of India?", opts: ["Sparrow", "Peacock", "Parrot", "Eagle"], ans: 1 },
+  { q: "How many sides does a hexagon have?", opts: ["5", "7", "6", "8"], ans: 2 },
+  { q: "In which direction does the sun rise?", opts: ["West", "North", "South", "East"], ans: 3 },
+  { q: "Which fruit is known as the 'king of fruits'?", opts: ["Apple", "Mango", "Banana", "Guava"], ans: 1 },
+];
+let quizIdx = 0;
+function loadQuiz() {
+  quizIdx = Math.floor(Math.random() * quizData.length);
+  renderQuiz();
+}
+function renderQuiz() {
+  const q = quizData[quizIdx];
+  document.getElementById('quizQ').textContent = q.q;
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizNext').style.display = 'none';
+  document.getElementById('quizOpts').innerHTML = q.opts.map((o,i) => `
+    <button class="quiz-opt" onclick="answerQuiz(${i})">${o}</button>`).join('');
+}
+function answerQuiz(i) {
+  const q = quizData[quizIdx];
+  const btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach(b => b.disabled = true);
+  btns[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+  if (i !== q.ans) btns[q.ans].classList.add('correct');
+  const res = document.getElementById('quizResult');
+  res.textContent = i === q.ans ? '🎉 Correct! Well done!' : '❌ Not quite — the answer is highlighted in green.';
+  res.style.display = 'block';
+  document.getElementById('quizNext').style.display = 'inline-block';
+}
+function nextQuiz() {
+  quizIdx = (quizIdx + 1) % quizData.length;
+  renderQuiz();
+}
+
+// ---- MEMORY GAME ----
+const memEmojis = ['🌸','🦋','🍀','⭐','🎈','🌻','🐦','🍎'];
+let memCards, memFlipped = [], memMatched = 0;
+function initMemory() {
+  memMatched = 0; memFlipped = [];
+  const pairs = [...memEmojis, ...memEmojis].sort(() => Math.random() - 0.5);
+  memCards = pairs.map((e,i) => ({ id:i, emoji:e, flipped:false, matched:false }));
+  renderMemory();
+  document.getElementById('memStatus').textContent = 'Match all pairs to win! 🎯';
+}
+function renderMemory() {
+  document.getElementById('memGrid').innerHTML = memCards.map(c => `
+    <div class="mem-card ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}"
+      onclick="flipCard(${c.id})">
+      ${c.flipped||c.matched ? c.emoji : ''}
+    </div>`).join('');
+}
+function flipCard(id) {
+  const c = memCards[id];
+  if (c.flipped || c.matched || memFlipped.length === 2) return;
+  c.flipped = true;
+  memFlipped.push(id);
+  renderMemory();
+  if (memFlipped.length === 2) {
+    const [a,b] = memFlipped.map(i => memCards[i]);
+    setTimeout(() => {
+      if (a.emoji === b.emoji) {
+        a.matched = b.matched = true;
+        memMatched++;
+        if (memMatched === 8) document.getElementById('memStatus').textContent = '🎉 You matched all pairs! Excellent!';
+        else document.getElementById('memStatus').textContent = `✅ Match! ${8-memMatched} pairs left.`;
+      } else {
+        a.flipped = b.flipped = false;
+        document.getElementById('memStatus').textContent = `Keep trying! ${8-memMatched} pairs left.`;
+      }
+      memFlipped = [];
+      renderMemory();
+    }, 900);
+  }
+}
+
+// ---- LEARN & GROW TABS ----
+function switchLearnTab(name, btn) {
+  document.querySelectorAll('.learn-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.learn-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('lpanel-' + name).classList.add('active');
+}
+
+// ---- LESSON ACCORDION ----
+function toggleLesson(card) {
+  card.classList.toggle('open');
+}
+
+// ---- HEALTH TRACKER ----
+const htVals = { htWater: 0, htSleep: 0 };
+function changeHt(id, delta) {
+  htVals[id] = Math.max(0, (htVals[id] || 0) + delta);
+  document.getElementById(id).textContent = htVals[id];
+  // Debounce save to backend
+  clearTimeout(htVals._saveTimer);
+  htVals._saveTimer = setTimeout(saveHealthLog, 1500);
+}
+
+// ---- FINANCE TRACKER ----
+let financeItems = [];
+function addFinanceItem() {
+  const name = document.getElementById('fiName').value.trim();
+  const amt = parseFloat(document.getElementById('fiAmt').value);
+  const type = document.getElementById('fiType').value;
+  if (!name || isNaN(amt) || amt <= 0) { showToast('⚠️ Please enter name and amount'); return; }
+  financeItems.push({ name, amt, type });
+  document.getElementById('fiName').value = '';
+  document.getElementById('fiAmt').value = '';
+  renderFinance();
+  showToast(`✅ ${type === 'income' ? 'Income' : 'Expense'} added!`);
+}
+function renderFinance() {
+  const list = document.getElementById('financeList');
+  list.innerHTML = financeItems.map((f, i) => `
+    <div class="finance-item ${f.type}">
+      <span class="fi-name">${f.name}</span>
+      <span class="fi-amount">${f.type === 'income' ? '+' : '-'}₹${f.amt.toLocaleString()}</span>
+    </div>`).join('');
+  const income = financeItems.filter(f => f.type === 'income').reduce((s, f) => s + f.amt, 0);
+  const expense = financeItems.filter(f => f.type === 'expense').reduce((s, f) => s + f.amt, 0);
+  const bal = income - expense;
+  if (financeItems.length > 0) {
+    document.getElementById('financeSummary').style.display = 'flex';
+    document.getElementById('fsIncome').textContent = '₹' + income.toLocaleString();
+    document.getElementById('fsExpense').textContent = '₹' + expense.toLocaleString();
+    const bEl = document.getElementById('fsBalance');
+    bEl.textContent = '₹' + Math.abs(bal).toLocaleString();
+    bEl.style.color = bal >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+// ---- HOBBIES ----
+let currentHobby = null;
+function openHobby(name, card) {
+  if (currentHobby === name) {
+    document.querySelectorAll('.hobby-detail').forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('.hobby-card').forEach(c => c.classList.remove('active-hob'));
+    currentHobby = null;
+    return;
+  }
+  document.querySelectorAll('.hobby-detail').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.hobby-card').forEach(c => c.classList.remove('active-hob'));
+  card.classList.add('active-hob');
+  document.getElementById('hobby-' + name).classList.add('active');
+  currentHobby = name;
+  document.getElementById('hobby-' + name).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ---- MANTRAS ----
+const mantras = [
+  { symbol: '🕉️', text: 'Om Namah Shivaya', meaning: 'I bow to Lord Shiva — the universal consciousness within me.' },
+  { symbol: '🌸', text: 'Om Mani Padme Hum', meaning: 'The jewel of compassion and wisdom lies in the lotus of the heart.' },
+  { symbol: '🙏', text: 'Jai Shri Ram', meaning: 'Victory to Lord Rama — a salutation to virtue, truth, and righteousness.' },
+  { symbol: '✨', text: 'Gayatri Mantra: Om Bhur Bhuvaḥ Svaḥ...', meaning: 'We meditate on the divine light of the Supreme Being. May it illuminate our minds.' },
+  { symbol: '🌺', text: 'Om Shanti Shanti Shanti', meaning: 'Peace — in body, mind, and spirit. May peace pervade everywhere.' },
+  { symbol: '💛', text: 'So Hum', meaning: 'I am That — a reminder that our true self is one with the universe.' },
+  { symbol: '🕯️', text: 'Asato Ma Sad Gamaya', meaning: 'Lead me from untruth to truth, from darkness to light, from death to immortality.' },
+];
+let mantraIdx = 0;
+function renderMantra() {
+  const m = mantras[mantraIdx];
+  document.getElementById('mantraSymbol').textContent = m.symbol;
+  document.getElementById('mantraText').textContent = m.text;
+  document.getElementById('mantraMeaning').textContent = m.meaning;
+}
+function nextMantra() { mantraIdx = (mantraIdx + 1) % mantras.length; renderMantra(); }
+function prevMantra() { mantraIdx = (mantraIdx - 1 + mantras.length) % mantras.length; renderMantra(); }
+renderMantra();
+
+// ---- SCREEN NAVIGATION ----
+function switchScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  if (name === 'home') {
+    document.getElementById('homeScreen').classList.add('active');
+    document.getElementById('bnav-home').classList.add('active');
+  } else if (name === 'profile') {
+    document.getElementById('profileScreen').classList.add('active');
+    document.getElementById('bnav-profile').classList.add('active');
+    renderEcContacts();
+  }
+}
+
+// ---- PROFILE (local state only used when offline) ----
+let profileData = { first: '', last: '', age: '', city: '', health: '', blood: '' };
+function toggleProfileEdit() {
+  document.getElementById('profileEditForm').classList.toggle('active');
+}
+function triggerAvatarUpload() {
+  document.getElementById('avatarUpload').click();
+}
+function handleAvatarChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const img = document.getElementById('avatarImg');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    document.getElementById('avatarEmoji').style.display = 'none';
+    showToast('✅ Photo updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ---- VOICE ASSISTANCE ----
+let voiceOpen = false, voiceSpeaking = false;
+function toggleVoicePanel() {
+  voiceOpen = !voiceOpen;
+  document.getElementById('voicePanel').classList.toggle('active', voiceOpen);
+  document.getElementById('voiceArrow').style.transform = voiceOpen ? 'rotate(90deg)' : '';
+}
+function toggleVoiceRead() {
+  if (voiceSpeaking) {
+    window.speechSynthesis.cancel();
+    voiceSpeaking = false;
+    document.getElementById('voiceSpeakBtn').textContent = '🔊 Read Aloud';
+    document.getElementById('voiceSpeakBtn').classList.remove('speaking');
+    document.getElementById('voiceWave').style.display = 'none';
+    document.getElementById('voiceStatus').textContent = 'Tap below to hear today\'s summary read aloud';
+    return;
+  }
+  const name = document.getElementById('displayName').textContent;
+  const greet = name !== 'Your Name' ? 'Hello ' + name + '! ' : 'Hello! ';
+  const now = new Date();
+  const hour = now.getHours();
+  const period = hour < 12 ? 'Good morning!' : hour < 17 ? 'Good afternoon!' : 'Good evening!';
+  const summary = greet + period + ' Today is ' + now.toLocaleDateString('en-IN', {weekday:'long', day:'numeric', month:'long'}) + '. You have ' + reminders.filter(r=>!r.done).length + ' pending reminders today. Have a wonderful day!';
+  speakText(summary);
+}
+function speakText(text) {
+  if (!window.speechSynthesis) { showToast('⚠️ Voice not supported on this browser'); return; }
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.85; utt.pitch = 1; utt.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const eng = voices.find(v => v.lang.startsWith('en'));
+  if (eng) utt.voice = eng;
+  voiceSpeaking = true;
+  document.getElementById('voiceSpeakBtn').textContent = '⏹ Stop';
+  document.getElementById('voiceSpeakBtn').classList.add('speaking');
+  document.getElementById('voiceWave').style.display = 'flex';
+  document.getElementById('voiceStatus').textContent = 'Speaking… tap Stop to end';
+  utt.onend = () => {
+    voiceSpeaking = false;
+    document.getElementById('voiceSpeakBtn').textContent = '🔊 Read Aloud';
+    document.getElementById('voiceSpeakBtn').classList.remove('speaking');
+    document.getElementById('voiceWave').style.display = 'none';
+    document.getElementById('voiceStatus').textContent = 'Done! Tap again to repeat';
+  };
+  window.speechSynthesis.speak(utt);
+}
+
+// ---- FONT SIZE ----
+const fontSizes = { small: '15px', medium: '18px', large: '21px', xlarge: '24px' };
+function setFontSize(size, label) {
+  applyFontSize(size);
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('fontSizeLabel').textContent = 'Current: ' + label;
+  showToast('✅ Font size set to ' + label);
+  syncSettingsToBackend({ font_size: size });
+}
+function applyFontSize(size) {
+  document.documentElement.style.setProperty('--font-size-base', fontSizes[size] || fontSizes.medium);
+  document.getElementById('fontSizeLabel').textContent = 'Current: ' + size.charAt(0).toUpperCase() + size.slice(1);
+}
+
+// ---- HIGH CONTRAST ----
+function toggleContrast() {
+  const on = document.getElementById('contrastToggle').checked;
+  document.body.classList.toggle('high-contrast', on);
+  showToast(on ? '🌓 High contrast mode ON' : '☀️ Normal mode restored');
+  syncSettingsToBackend({ high_contrast: on ? 1 : 0 });
+}
+
+// ---- NOTIFICATIONS ----
+let notifOpen = false;
+function toggleNotifPanel() {
+  notifOpen = !notifOpen;
+  document.getElementById('notifPanel').classList.toggle('active', notifOpen);
+  document.getElementById('notifArrow').style.transform = notifOpen ? 'rotate(90deg)' : '';
+}
+function notifChange(el, name) {
+  showToast(el.checked ? '🔔 ' + name + ' ON' : '🔕 ' + name + ' OFF');
+}
+
+// ---- EMERGENCY CONTACTS ----
+const DEFAULT_CONTACTS = [
+  { name: 'Emergency Services', phone: '112', relation: 'Ambulance', avatar: '🚑' },
+  { name: 'Family Member', phone: '+91 98765 43210', relation: 'Son', avatar: '👨' },
+  { name: 'Dr. Anita Sharma', phone: '+91 91234 56789', relation: 'Doctor', avatar: '👩‍⚕️' },
+];
+let ecContacts = [...DEFAULT_CONTACTS];
+let ecOpen = false;
+function toggleEcPanel() {
+  ecOpen = !ecOpen;
+  document.getElementById('ecPanel').classList.toggle('active', ecOpen);
+  document.getElementById('ecArrow').style.transform = ecOpen ? 'rotate(90deg)' : '';
+  if (ecOpen) renderEcContacts();
+}
+function renderEcContacts() {
+  const relEmojis = { 'Son':'👨','Daughter':'👩','Spouse':'💑','Sibling':'🧑','Friend':'😊','Doctor':'👩‍⚕️','Neighbour':'🏠','Caregiver':'🤝','Ambulance':'🚑','' :'👤' };
+  document.getElementById('ecContactsList').innerHTML = ecContacts.map((c, i) => `
+    <div class="ec-contact-card">
+      <div class="ec-avatar" style="background:${['#D6EAFA','#D8F5E6','#FDE8D5','#EDE5F8','#FFF3C4'][i%5]}">${c.avatar || relEmojis[c.relation] || '👤'}</div>
+      <div class="ec-info">
+        <div class="ec-name">${c.name}</div>
+        <div class="ec-phone">📞 ${c.phone}</div>
+        <div class="ec-relation">${c.relation}</div>
+      </div>
+      <button class="ec-del" onclick="deleteEc(${i})">✕</button>
+    </div>`).join('');
+  document.getElementById('ecCountLabel').textContent = ecContacts.length + ' contact' + (ecContacts.length !== 1 ? 's' : '') + ' saved';
+  // sync emergency modal contacts
+  syncEmergencyModal();
+}
+// renderEcContacts and syncEmergencyModal remain unchanged below
+function syncEmergencyModal() {
+  const modalBody = document.querySelector('#emergencyModal .modal');
+  const existingContacts = modalBody.querySelectorAll('.modal-contact');
+  existingContacts.forEach(c => c.remove());
+  const closeBtn = modalBody.querySelector('.modal-close');
+  ecContacts.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'modal-contact';
+    div.innerHTML = `<div>${c.avatar || '📞'} ${c.relation}</div><a href="tel:${c.phone.replace(/\s/g,'')}">📞 ${c.phone}</a>`;
+    modalBody.insertBefore(div, closeBtn);
+  });
+}
+
+// Initialize
+renderEcContacts();
+
+// ---- STRETCHES ----
+const stretches = [
+  { icon:'🙆', name:'Neck Roll', desc:'Gently roll your head in a slow circle, 5 times each side.' },
+  { icon:'🤸', name:'Shoulder Shrug', desc:'Raise both shoulders to your ears, hold 3 sec, release. Repeat 8 times.' },
+  { icon:'🧎', name:'Seated Forward Bend', desc:'Sit up straight, slowly reach towards your toes. Hold 10 seconds.' },
+  { icon:'🦵', name:'Ankle Rotation', desc:'Rotate each ankle in circles, 10 times each direction.' },
+  { icon:'💪', name:'Wrist Stretch', desc:'Extend your arm, gently pull fingers back with other hand. Hold 10 sec each.' },
+];
+function loadStretches() {
+  document.getElementById('stretchList').innerHTML = stretches.map(s => `
+    <div style="background:var(--primary-soft);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;">
+      <span style="font-size:1.8rem">${s.icon}</span>
+      <div>
+        <div style="font-weight:800;font-size:1rem;margin-bottom:4px;">${s.name}</div>
+        <div style="font-size:0.92rem;color:var(--text-muted);line-height:1.5;">${s.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ─── AUTH ROW HANDLER ─────────────────────────────────────────── */
+function handleAuthRowTap() {
+  if (isLoggedIn()) {
+    if (confirm('Log out of DayCare? Your data is safely saved in the cloud.')) {
+      logoutUser();
+    }
+  } else {
+    openAuthModal('login');
+  }
+}
+function updateAuthProfileRow() {
+  const title = document.getElementById('authRowTitle');
+  const sub   = document.getElementById('authRowSub');
+  const btn   = document.getElementById('authRowBtn');
+  if (!title) return;
+  if (isLoggedIn()) {
+    title.textContent = currentUser?.name || 'Logged In';
+    sub.textContent   = '✅ Data synced to cloud · Tap to log out';
+    btn.textContent   = '🚪 Logout';
+    btn.style.color   = 'var(--red)';
+  } else {
+    title.textContent = 'Sign In / Register';
+    sub.textContent   = 'Save your data to the cloud';
+    btn.textContent   = '→';
+    btn.style.color   = 'var(--primary)';
+  }
+}
+
+/* ─── OVERRIDE switchScreen TO INCLUDE AUTH ROW UPDATE ─────────── */
+const _origSwitchScreen = switchScreen;
+function switchScreen(name) {
+  _origSwitchScreen(name);
+  if (name === 'profile') updateAuthProfileRow();
+}
+
+/* ─── VOICE — read real reminders from backend ─────────────────── */
+function toggleVoiceRead() {
+  if (voiceSpeaking) {
+    window.speechSynthesis.cancel();
+    voiceSpeaking = false;
+    document.getElementById('voiceSpeakBtn').textContent = '🔊 Read Aloud';
+    document.getElementById('voiceSpeakBtn').classList.remove('speaking');
+    document.getElementById('voiceWave').style.display = 'none';
+    document.getElementById('voiceStatus').textContent = 'Tap below to hear today\'s summary read aloud';
+    return;
+  }
+  const name = isLoggedIn() ? currentUser.name : document.getElementById('displayName').textContent;
+  const greet = name && name !== 'Your Name' ? 'Hello ' + name + '! ' : 'Hello! ';
+  const now = new Date();
+  const hour = now.getHours();
+  const period = hour < 12 ? 'Good morning!' : hour < 17 ? 'Good afternoon!' : 'Good evening!';
+  const pending = reminders.filter(r => !r.done);
+  const reminderText = pending.length > 0
+    ? `You have ${pending.length} pending reminder${pending.length > 1 ? 's' : ''} today: ` + pending.map(r => r.name + ' at ' + formatTime(r.time)).join(', ') + '.'
+    : 'All your reminders for today are done! Well done!';
+  const summary = greet + period + ' Today is ' + now.toLocaleDateString('en-IN', {weekday:'long', day:'numeric', month:'long'}) + '. ' + reminderText + ' Have a wonderful day!';
+  speakText(summary);
+}
+
+/* ─── APP BOOT ─────────────────────────────────────────────────── */
+(async function init() {
+  renderReminders();
+  renderEcContacts();
+  renderMantra();
+  updateNavAuth();
+  updateAuthProfileRow();
+
+  // If token exists from previous session, load data
+  if (isLoggedIn()) {
+    // Show cached user data immediately
+    updateProfileUI(currentUser);
+    updateNavAuth();
+    // Then refresh from backend
+    await loadAllData();
+  } else {
+    // Try pinging backend to show connection status
+    const ping = await apiFetch('/ping');
+    if (ping.success) {
+      updateConnBadge(true);
+    }
+  }
+})();
+</script>
+</body>
+</html>
