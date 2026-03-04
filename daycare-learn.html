@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Saarthi — Learn & Grow</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ─────────────────────────────────────── */
+:root {
+  --indigo:    #3D4FA0;
+  --indigo-dk: #2A3578;
+  --indigo-lt: #6677CC;
+  --indigo-s:  #EEF1FA;
+  --cream:     #F6F7FD;
+  --white:     #FFFFFF;
+  --ink:       #191D38;
+  --ink-mid:   #4A507A;
+  --ink-pale:  #8E95BB;
+  --border:    #DDE2F5;
+  --teal:      #2A8A7E; --teal-s: #E0F5F2;
+  --green:     #2E8B4A; --green-s: #D4F0E0;
+  --sun:       #E07B39; --sun-s: #FDE8D5;
+  --gold:      #B87800; --gold-s: #FFF3C4;
+  --purple:    #7048A8; --purple-s: #EDE5F8;
+  --red:       #D94032; --red-s: #FCDEDE;
+  --pink:      #C24478; --pink-s: #FCE0ED;
+
+  --r-sm: 12px; --r-md: 18px; --r-lg: 24px;
+  --shadow: 0 4px 22px rgba(20,25,60,.09);
+  --shadow-pop: 0 10px 40px rgba(20,25,60,.17);
+  --fs: 17px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  font-size: var(--fs);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 120px;
+}
+
+/* ── HERO ─────────────────────────────────────── */
+.hero {
+  background: linear-gradient(148deg, var(--indigo) 0%, var(--indigo-dk) 55%, #141B4A 100%);
+  padding: 0 0 32px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content:''; position:absolute;
+  width:280px; height:280px; border-radius:50%;
+  background:rgba(255,255,255,.05);
+  top:-100px; right:-60px; pointer-events:none;
+}
+.hero::after {
+  content:''; position:absolute;
+  width:150px; height:150px; border-radius:50%;
+  background:rgba(255,255,255,.04);
+  bottom:-50px; left:-30px; pointer-events:none;
+}
+.top-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 20px 0;
+}
+.back-btn {
+  background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.3);
+  border-radius:50%; width:42px; height:42px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; cursor:pointer; color:white; transition:background .2s;
+}
+.back-btn:hover { background:rgba(255,255,255,.25); }
+.top-bar-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem; color:rgba(255,255,255,.9); font-weight:700;
+}
+.top-bar-right { width:42px; }
+.hero-content { padding:22px 20px 0; }
+.hero-date { font-size:.82rem; color:rgba(255,255,255,.65); font-weight:700; letter-spacing:.5px; margin-bottom:4px; }
+.hero-heading {
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem; font-weight:800; color:white; line-height:1.2;
+}
+.hero-heading em { font-style:italic; color:rgba(255,255,255,.75); }
+.hero-sub { color:rgba(255,255,255,.7); font-size:.9rem; margin-top:6px; }
+
+/* XP / streak bar */
+.xp-bar-wrap {
+  background:rgba(255,255,255,.12);
+  border-radius:var(--r-md); padding:16px 18px;
+  margin-top:18px; border:1px solid rgba(255,255,255,.18);
+}
+.xp-top {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:8px;
+}
+.xp-label { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.85); }
+.xp-pts { font-size:1.1rem; font-weight:900; color:white; }
+.xp-track {
+  background:rgba(255,255,255,.2); border-radius:10px; height:10px; overflow:hidden;
+}
+.xp-fill {
+  height:100%; border-radius:10px;
+  background:linear-gradient(90deg,#FFD700,#FFA500);
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  width:0%;
+}
+.xp-stats {
+  display:flex; gap:16px; margin-top:12px;
+}
+.xp-stat { text-align:center; }
+.xp-stat-val { font-size:1.2rem; font-weight:900; color:white; }
+.xp-stat-lbl { font-size:.65rem; color:rgba(255,255,255,.65); font-weight:700; }
+
+/* ── CATEGORY CARDS (top level) ─────────────────── */
+.cat-scroll {
+  display:flex; gap:12px;
+  overflow-x:auto; scrollbar-width:none;
+  padding:20px 20px 0;
+}
+.cat-scroll::-webkit-scrollbar { display:none; }
+.cat-card {
+  flex-shrink:0; width:110px;
+  background:var(--white);
+  border-radius:var(--r-md);
+  padding:18px 12px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  border:2.5px solid transparent;
+  transition:all .22s;
+  animation:slideUp .4s ease both;
+}
+.cat-card:nth-child(2){animation-delay:.06s}
+.cat-card:nth-child(3){animation-delay:.12s}
+.cat-card:nth-child(4){animation-delay:.18s}
+.cat-card:nth-child(5){animation-delay:.24s}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.cat-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-pop); }
+.cat-card.active { border-color:var(--indigo); background:var(--indigo-s); }
+.cat-ico { font-size:2rem; margin-bottom:8px; display:block; }
+.cat-name { font-size:.78rem; font-weight:900; line-height:1.3; }
+.cat-count { font-size:.68rem; color:var(--ink-pale); margin-top:3px; }
+
+/* ── SECTION ─────────────────────────────────────── */
+.section { padding:22px 20px 0; }
+.section-hd {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+}
+.section-title {
+  font-size:.75rem; font-weight:900; color:var(--ink-pale);
+  text-transform:uppercase; letter-spacing:1.8px;
+}
+.see-all {
+  font-size:.8rem; font-weight:800; color:var(--indigo); cursor:pointer;
+}
+
+/* ── FEATURED LESSON CARD ───────────────────────── */
+.featured-card {
+  border-radius:var(--r-lg);
+  padding:24px 22px;
+  position:relative; overflow:hidden;
+  cursor:pointer; transition:all .25s;
+  box-shadow:var(--shadow-pop);
+  margin-bottom:14px;
+}
+.featured-card:hover { transform:translateY(-2px); }
+.featured-tag {
+  display:inline-block;
+  background:rgba(255,255,255,.25);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:20px; padding:4px 12px;
+  font-size:.72rem; font-weight:900; color:white;
+  text-transform:uppercase; letter-spacing:.8px;
+  margin-bottom:10px;
+}
+.featured-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem; font-weight:800; color:white;
+  line-height:1.3; margin-bottom:6px;
+}
+.featured-sub { font-size:.85rem; color:rgba(255,255,255,.8); line-height:1.5; }
+.featured-meta {
+  display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;
+}
+.fmeta {
+  background:rgba(255,255,255,.2);
+  border-radius:20px; padding:5px 12px;
+  font-size:.75rem; font-weight:800; color:white;
+  display:flex; align-items:center; gap:5px;
+}
+.featured-card .deco {
+  position:absolute; right:-20px; bottom:-20px;
+  font-size:6rem; opacity:.12; pointer-events:none;
+}
+
+/* ── LESSON CARD (list) ─────────────────────────── */
+.lesson-list { display:flex; flex-direction:column; gap:11px; }
+.lesson-card {
+  background:var(--white);
+  border-radius:var(--r-md);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  border:2px solid transparent;
+  transition:all .2s;
+}
+.lesson-card:hover { box-shadow:var(--shadow-pop); transform:translateY(-1px); }
+.lesson-card.open { border-color:var(--indigo); }
+.lc-header {
+  display:flex; align-items:center; gap:14px;
+  padding:17px 18px; cursor:pointer;
+}
+.lc-icon {
+  width:50px; height:50px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem; flex-shrink:0;
+}
+.lc-info { flex:1; }
+.lc-title { font-size:.98rem; font-weight:800; }
+.lc-sub { font-size:.78rem; color:var(--ink-pale); margin-top:2px; }
+.lc-badges { display:flex; gap:6px; margin-top:5px; flex-wrap:wrap; }
+.lc-badge {
+  font-size:.65rem; font-weight:900; padding:2px 8px;
+  border-radius:20px; text-transform:uppercase; letter-spacing:.4px;
+}
+.lc-arrow { font-size:1.2rem; color:var(--ink-pale); transition:transform .25s; flex-shrink:0; }
+.lesson-card.open .lc-arrow { transform:rotate(90deg); }
+.lc-progress {
+  width:36px; height:36px; flex-shrink:0;
+}
+.lc-progress svg { transform:rotate(-90deg); }
+.lcp-bg { fill:none; stroke:var(--border); stroke-width:3.5; }
+.lcp-fill { fill:none; stroke:var(--indigo); stroke-width:3.5; stroke-linecap:round;
+  stroke-dasharray:95; transition:stroke-dashoffset 1s; }
+
+/* lesson body */
+.lc-body {
+  max-height:0; overflow:hidden;
+  transition:max-height .38s cubic-bezier(.4,0,.2,1);
+  border-top:0 solid var(--border);
+}
+.lesson-card.open .lc-body { max-height:2000px; border-top-width:1.5px; }
+.lc-body-inner { padding:18px 20px 22px; }
+.lc-intro { font-size:.92rem; line-height:1.65; color:var(--ink-mid); margin-bottom:16px; }
+
+/* steps */
+.steps { display:flex; flex-direction:column; gap:10px; }
+.step {
+  display:flex; gap:13px; align-items:flex-start;
+  background:var(--cream); border-radius:13px; padding:13px 15px;
+}
+.step-num {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--indigo); color:white;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.82rem; font-weight:900; flex-shrink:0; margin-top:1px;
+}
+.step-text { font-size:.9rem; line-height:1.55; }
+.step-text strong { color:var(--indigo); }
+.tip-box {
+  background:var(--indigo-s);
+  border-left:4px solid var(--indigo);
+  border-radius:0 12px 12px 0;
+  padding:13px 15px;
+  font-size:.87rem; line-height:1.55; margin-top:12px;
+}
+.tip-box strong { color:var(--indigo); }
+
+/* mark done */
+.mark-done-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; margin-top:16px;
+  background:linear-gradient(135deg,var(--indigo),var(--indigo-dk));
+  color:white; border:none; border-radius:14px;
+  padding:13px;
+  font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:900;
+  cursor:pointer; transition:all .2s;
+  box-shadow:0 4px 16px rgba(61,79,160,.35);
+}
+.mark-done-btn.done-state { background:linear-gradient(135deg,var(--green),#1F6335); }
+.mark-done-btn:hover { transform:translateY(-1px); }
+
+/* ── QUIZ CARD ───────────────────────────────────── */
+.quiz-card {
+  background:var(--white);
+  border-radius:var(--r-lg);
+  padding:22px 20px;
+  box-shadow:var(--shadow);
+}
+.quiz-q { font-size:1rem; font-weight:800; line-height:1.5; margin-bottom:16px; }
+.quiz-opts { display:flex; flex-direction:column; gap:9px; }
+.q-opt {
+  background:var(--cream); border:2px solid var(--border);
+  border-radius:13px; padding:13px 16px;
+  font-family:'Nunito',sans-serif; font-size:.92rem; font-weight:700;
+  cursor:pointer; text-align:left; transition:all .18s;
+  display:flex; align-items:center; gap:10px;
+}
+.q-opt:hover { background:var(--indigo-s); border-color:var(--indigo); }
+.q-opt.correct { background:var(--green-s); border-color:var(--green); color:var(--green); }
+.q-opt.wrong   { background:var(--red-s);   border-color:var(--red);   color:var(--red); }
+.q-result { font-weight:800; font-size:.92rem; margin-top:12px; display:none; padding:10px 14px; border-radius:12px; }
+.q-result.ok  { background:var(--green-s); color:var(--green); }
+.q-result.bad { background:var(--red-s); color:var(--red); }
+.q-next {
+  background:var(--indigo); color:white; border:none;
+  border-radius:12px; padding:12px 24px;
+  font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:900;
+  cursor:pointer; margin-top:12px; display:none;
+  box-shadow:0 3px 12px rgba(61,79,160,.35);
+}
+.quiz-score { font-size:.82rem; color:var(--ink-pale); font-weight:700; text-align:right; margin-bottom:10px; }
+
+/* ── MANTRA CARD ─────────────────────────────────── */
+.mantra-card {
+  background:linear-gradient(135deg,#FFF9E8,#FFF0C0);
+  border-radius:var(--r-lg);
+  padding:28px 22px;
+  text-align:center;
+  border:2px solid #E8D080;
+  box-shadow:var(--shadow);
+}
+.mantra-sym { font-size:2.8rem; margin-bottom:10px; }
+.mantra-text {
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem; font-weight:700;
+  color:#5A3E00; line-height:1.6; margin-bottom:6px;
+}
+.mantra-meaning { font-size:.88rem; color:#8A6520; font-style:italic; line-height:1.5; }
+.mantra-nav { display:flex; gap:10px; justify-content:center; margin-top:16px; }
+.mnav-btn {
+  background:var(--gold); color:white; border:none;
+  border-radius:12px; padding:11px 22px;
+  font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:900;
+  cursor:pointer; transition:all .2s; box-shadow:0 3px 12px rgba(184,120,0,.3);
+}
+.mnav-btn:hover { transform:translateY(-1px); }
+
+/* ── HOBBY GRID ──────────────────────────────────── */
+.hobby-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+}
+.hobby-card {
+  background:var(--white);
+  border-radius:var(--r-md);
+  padding:20px 16px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:all .22s;
+}
+.hobby-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-pop); }
+.hobby-card.active { border-color:var(--indigo); background:var(--indigo-s); }
+.hb-ico { font-size:2.2rem; display:block; margin-bottom:8px; }
+.hb-name { font-size:.95rem; font-weight:900; }
+.hb-desc { font-size:.75rem; color:var(--ink-pale); margin-top:3px; }
+
+/* hobby detail panel */
+.hobby-detail {
+  background:var(--white);
+  border-radius:var(--r-lg);
+  padding:22px 20px;
+  box-shadow:var(--shadow-pop);
+  margin-top:14px;
+  border:2px solid var(--indigo);
+  display:none; animation:popIn .25s ease;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.hobby-detail.active { display:block; }
+.hd-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:800; margin-bottom:14px; color:var(--indigo); }
+
+/* ── FINANCE TRACKER ─────────────────────────────── */
+.fin-summary {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:10px; margin-bottom:16px;
+}
+.fin-sum-card {
+  background:var(--white); border-radius:var(--r-md);
+  padding:14px 12px; text-align:center; box-shadow:var(--shadow);
+}
+.fin-sum-ico { font-size:1.4rem; margin-bottom:4px; }
+.fin-sum-val { font-size:1.1rem; font-weight:900; }
+.fin-sum-lbl { font-size:.7rem; color:var(--ink-pale); font-weight:700; margin-top:2px; }
+.fin-add-row {
+  display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;
+}
+.fin-input, .fin-select {
+  flex:1; min-width:0;
+  padding:12px 14px;
+  border:2px solid var(--border);
+  border-radius:var(--r-sm);
+  font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:600;
+  color:var(--ink); background:var(--cream); outline:none;
+  transition:border .2s;
+}
+.fin-input:focus, .fin-select:focus { border-color:var(--indigo); }
+.fin-add-btn {
+  background:var(--indigo); color:white; border:none;
+  border-radius:var(--r-sm); padding:12px 18px;
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:.9rem; cursor:pointer;
+}
+.fin-list { display:flex; flex-direction:column; gap:8px; }
+.fin-item {
+  background:var(--cream); border-radius:12px; padding:12px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  animation:slideUp .3s ease;
+}
+.fin-item-l { display:flex; align-items:center; gap:10px; }
+.fin-item-ico { font-size:1.1rem; }
+.fin-item-name { font-weight:700; font-size:.9rem; }
+.fin-item-date { font-size:.72rem; color:var(--ink-pale); }
+.fin-item-amt { font-size:1rem; font-weight:900; }
+.fin-item.income .fin-item-amt { color:var(--green); }
+.fin-item.expense .fin-item-amt { color:var(--red); }
+
+/* ── BREATHING ───────────────────────────────────── */
+.breath-area {
+  display:flex; flex-direction:column; align-items:center;
+  padding:10px 0 16px;
+}
+.breath-circle {
+  width:130px; height:130px; border-radius:50%;
+  background:var(--indigo-s); border:5px solid var(--indigo);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; font-weight:900; color:var(--indigo);
+  transition:transform 4s ease-in-out, background 4s;
+  margin-bottom:14px;
+}
+.breath-circle.inhale { transform:scale(1.45); background:#C8D0F8; }
+.breath-circle.exhale { transform:scale(1); }
+.breath-lbl { font-size:.9rem; color:var(--ink-pale); font-weight:700; margin-bottom:14px; }
+.breath-btn {
+  background:var(--indigo); color:white; border:none;
+  border-radius:40px; padding:13px 32px;
+  font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:900;
+  cursor:pointer; box-shadow:0 4px 16px rgba(61,79,160,.38);
+  transition:all .2s;
+}
+.breath-btn:hover { transform:translateY(-1px); }
+
+/* ── BOTTOM NAV ──────────────────────────────────── */
+.nav-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--white); border-top:1.5px solid var(--border);
+  display:flex; box-shadow:0 -4px 20px rgba(0,0,0,.08); z-index:99;
+}
+.nb {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:10px 4px 12px;
+  border:none; background:none; cursor:pointer;
+  font-family:'Nunito',sans-serif; font-size:.72rem; font-weight:800;
+  color:var(--ink-pale); gap:4px; transition:color .2s; position:relative;
+}
+.nb.active { color:var(--indigo); }
+.nb.active::after {
+  content:''; position:absolute;
+  top:0; left:20%; right:20%; height:3px;
+  background:var(--indigo); border-radius:0 0 4px 4px;
+}
+.nb-ico { font-size:1.45rem; transition:transform .2s; }
+.nb.active .nb-ico { transform:scale(1.15); }
+
+/* ── TOAST ───────────────────────────────────────── */
+.toast {
+  position:fixed; bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink); color:white;
+  padding:12px 26px; border-radius:40px;
+  font-size:.88rem; font-weight:700;
+  white-space:nowrap; z-index:9999;
+  opacity:0; pointer-events:none;
+  transition:opacity .3s, transform .3s;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="top-bar">
+    <button class="back-btn" onclick="toast('Going Home…')">←</button>
+    <div class="top-bar-title">Learn & Grow</div>
+    <div class="top-bar-right"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-date" id="heroDate"></div>
+    <div class="hero-heading">Knowledge &<br/><em>Wisdom, Daily</em></div>
+    <div class="hero-sub">Tap any topic to start learning today</div>
+    <div class="xp-bar-wrap">
+      <div class="xp-top">
+        <span class="xp-label">🌟 Learning Progress</span>
+        <span class="xp-pts" id="xpPts">0 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+      <div class="xp-stats">
+        <div class="xp-stat"><div class="xp-stat-val" id="xpLessons">0</div><div class="xp-stat-lbl">Lessons Done</div></div>
+        <div class="xp-stat"><div class="xp-stat-val" id="xpStreak">3</div><div class="xp-stat-lbl">Day Streak 🔥</div></div>
+        <div class="xp-stat"><div class="xp-stat-val" id="xpQuiz">0</div><div class="xp-stat-lbl">Quiz Score</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CATEGORY SCROLL ══ -->
+<div class="cat-scroll" id="catScroll">
+  <div class="cat-card active" onclick="jumpSection('health',this)">
+    <span class="cat-ico">❤️</span>
+    <div class="cat-name">Health Wellness</div>
+    <div class="cat-count">3 lessons</div>
+  </div>
+  <div class="cat-card" onclick="jumpSection('digital',this)">
+    <span class="cat-ico">📱</span>
+    <div class="cat-name">Digital Skills</div>
+    <div class="cat-count">4 lessons</div>
+  </div>
+  <div class="cat-card" onclick="jumpSection('hobby',this)">
+    <span class="cat-ico">🎨</span>
+    <div class="cat-name">Hobbies</div>
+    <div class="cat-count">6 activities</div>
+  </div>
+  <div class="cat-card" onclick="jumpSection('finance',this)">
+    <span class="cat-ico">💰</span>
+    <div class="cat-name">Finance</div>
+    <div class="cat-count">3 lessons</div>
+  </div>
+  <div class="cat-card" onclick="jumpSection('spiritual',this)">
+    <span class="cat-ico">🕉️</span>
+    <div class="cat-name">Spiritual</div>
+    <div class="cat-count">4 lessons</div>
+  </div>
+</div>
+
+<!-- ══ FEATURED ══ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-title">⭐ Featured Today</div>
+  </div>
+  <div class="featured-card" style="background:linear-gradient(135deg,#2A8A7E,#1A5A52);" onclick="openLesson('heartHealth')">
+    <div class="deco">❤️</div>
+    <div class="featured-tag">Health • Featured</div>
+    <div class="featured-title">Heart Health: Small Steps, Big Results</div>
+    <div class="featured-sub">Simple daily habits that significantly improve your heart health and overall wellbeing.</div>
+    <div class="featured-meta">
+      <span class="fmeta">⏱ 5 min</span>
+      <span class="fmeta">📖 4 steps</span>
+      <span class="fmeta">🟢 Beginner</span>
+    </div>
+  </div>
+  <div class="featured-card" style="background:linear-gradient(135deg,#3D4FA0,#252F78);" onclick="openLesson('whatsapp')">
+    <div class="deco">📱</div>
+    <div class="featured-tag">Digital • Popular</div>
+    <div class="featured-title">WhatsApp: Stay Connected with Family</div>
+    <div class="featured-sub">Master messages, photos, voice notes and video calls — step by step.</div>
+    <div class="featured-meta">
+      <span class="fmeta">⏱ 7 min</span>
+      <span class="fmeta">📖 4 steps</span>
+      <span class="fmeta">🟡 Easy</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BREATHING EXERCISE ══ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-title">🌬️ Breathing Exercise</div>
+  </div>
+  <div style="background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:20px;">
+    <div style="font-size:.95rem;font-weight:800;margin-bottom:4px;">4-4-4 Box Breathing</div>
+    <div style="font-size:.82rem;color:var(--ink-pale);margin-bottom:16px;">Inhale 4s → Hold 4s → Exhale 4s. Repeat to feel calm.</div>
+    <div class="breath-area">
+      <div class="breath-circle" id="breathCircle">Ready</div>
+      <div class="breath-lbl" id="breathLbl">Press Start to begin</div>
+      <button class="breath-btn" id="breathBtn" onclick="toggleBreath()">▶ Start</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HEALTH & WELLNESS ══ -->
+<div class="section" id="sec-health">
+  <div class="section-hd">
+    <div class="section-title">❤️ Health & Wellness</div>
+  </div>
+  <div class="lesson-list" id="health-lessons"></div>
+</div>
+
+<!-- ══ DIGITAL SKILLS ══ -->
+<div class="section" id="sec-digital">
+  <div class="section-hd">
+    <div class="section-title">📱 Digital Skills</div>
+  </div>
+  <div class="lesson-list" id="digital-lessons"></div>
+</div>
+
+<!-- ══ BRAIN QUIZ ══ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-title">🧠 Brain Quiz</div>
+    <span class="see-all" onclick="nextQuiz()">Next →</span>
+  </div>
+  <div class="quiz-card">
+    <div class="quiz-score" id="quizScore">Score: 0 / 0</div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="q-result" id="qResult"></div>
+    <button class="q-next" id="qNext" onclick="nextQuiz()">Next Question →</button>
+  </div>
+</div>
+
+<!-- ══ HOBBIES & CREATIVITY ══ -->
+<div class="section" id="sec-hobby">
+  <div class="section-hd">
+    <div class="section-title">🎨 Hobbies & Creativity</div>
+  </div>
+  <div class="hobby-grid" id="hobbyGrid"></div>
+  <div id="hobbyDetail"></div>
+</div>
+
+<!-- ══ BASIC FINANCE ══ -->
+<div class="section" id="sec-finance">
+  <div class="section-hd">
+    <div class="section-title">💰 Basic Finance</div>
+  </div>
+  <!-- Finance Tracker -->
+  <div style="background:var(--white);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow);margin-bottom:14px;">
+    <div style="font-size:.95rem;font-weight:800;margin-bottom:14px;color:var(--gold);">📒 Monthly Expense Tracker</div>
+    <div class="fin-summary" id="finSummary"></div>
+    <div class="fin-add-row">
+      <input class="fin-input" id="finName" placeholder="Item name" style="min-width:110px;"/>
+      <input class="fin-input" id="finAmt" type="number" placeholder="₹ Amount" style="max-width:110px;"/>
+      <select class="fin-select" id="finType" style="max-width:120px;">
+        <option value="expense">📤 Expense</option>
+        <option value="income">📥 Income</option>
+      </select>
+      <button class="fin-add-btn" onclick="addFinItem()">Add</button>
+    </div>
+    <div class="fin-list" id="finList"></div>
+  </div>
+  <div class="lesson-list" id="finance-lessons"></div>
+</div>
+
+<!-- ══ SPIRITUAL ══ -->
+<div class="section" id="sec-spiritual">
+  <div class="section-hd">
+    <div class="section-title">🕉️ Spiritual Knowledge</div>
+  </div>
+  <div class="mantra-card">
+    <div class="mantra-sym" id="mantraSym">🕉️</div>
+    <div class="mantra-text" id="mantraText"></div>
+    <div class="mantra-meaning" id="mantraMean"></div>
+    <div class="mantra-nav">
+      <button class="mnav-btn" onclick="prevMantra()">← Prev</button>
+      <button class="mnav-btn" onclick="nextMantra()">Next →</button>
+    </div>
+  </div>
+  <div class="lesson-list" id="spiritual-lessons" style="margin-top:14px;"></div>
+</div>
+
+<div style="height:120px;"></div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="nav-bar">
+  <button class="nb" onclick="toast('Going Home…')"><span class="nb-ico">🏠</span>Home</button>
+  <button class="nb" onclick="toast('Opening Tasks…')"><span class="nb-ico">📋</span>Tasks</button>
+  <button class="nb active"><span class="nb-ico">📚</span>Learn</button>
+  <button class="nb" onclick="toast('Opening Profile…')"><span class="nb-ico">👤</span>Profile</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── UTILS ── */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+function jumpSection(id, card) {
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  const el = document.getElementById('sec-' + id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── DATE ── */
+const now = new Date();
+const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months   = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('heroDate').textContent = `${dayNames[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+/* ── XP / PROGRESS ── */
+let xp = 0, lessonsCompleted = 0, quizScore = 0, quizTotal = 0;
+function addXP(pts) {
+  xp += pts; lessonsCompleted++;
+  document.getElementById('xpPts').textContent      = xp + ' XP';
+  document.getElementById('xpLessons').textContent  = lessonsCompleted;
+  const pct = Math.min(xp / 300 * 100, 100);
+  document.getElementById('xpFill').style.width     = pct + '%';
+}
+
+/* ── LESSONS DATA ── */
+const lessons = {
+  health: [
+    {
+      id:'heartHealth', icon:'🫀', bg:'#FCDEDE', title:'Heart Health Tips', sub:'Simple habits for a strong heart', time:'5 min', level:'Beginner',
+      intro:'Keeping your heart healthy becomes more important as we age. Small daily habits make a big difference.',
+      steps:[
+        { t:'30-Minute Walk', b:'Walk for at least 30 minutes every day — even a slow, comfortable pace significantly benefits your heart.' },
+        { t:'Eat Smart', b:'Eat plenty of fruits, vegetables, and whole grains. Reduce salt and fried/oily foods to protect your arteries.' },
+        { t:'Avoid Harmful Habits', b:'Avoid smoking and limit alcohol. Both put serious extra stress on your heart and blood vessels.' },
+        { t:'Monitor Blood Pressure', b:'Check your blood pressure regularly. A normal reading is around 120/80 mmHg. Keep a logbook of readings.' },
+      ],
+      tip:'Laughter is medicine! Watching a funny show or talking with friends lowers stress hormones naturally.'
+    },
+    {
+      id:'nutrition', icon:'🥗', bg:'#D4F0E0', title:'Nutrition for Seniors', sub:'What to eat and what to avoid', time:'6 min', level:'Beginner',
+      intro:'As we age, our bodies need slightly different nutrition. Here is what matters most for your health.',
+      steps:[
+        { t:'Calcium & Vitamin D', b:'Drink milk, eat curd, and sit in morning sunlight (10–15 min) to keep bones strong and prevent fractures.' },
+        { t:'Fibre', b:'Eat whole grains, dals, and vegetables to support digestion, prevent constipation, and manage blood sugar.' },
+        { t:'Protein', b:'Include eggs, paneer, legumes, or fish at least once daily to maintain muscle strength and slow muscle loss.' },
+        { t:'Stay Hydrated', b:'Drink 6–8 glasses of water daily. Seniors often feel less thirsty but still need adequate fluids.' },
+      ],
+      tip:'Eat 5 smaller meals rather than 2–3 large ones. Easier on digestion and keeps energy steady all day.'
+    },
+    {
+      id:'medicine', icon:'💊', bg:'#D6EAFA', title:'Managing Medicines Safely', sub:'How to take medicines correctly', time:'4 min', level:'Important',
+      intro:'Taking medicines correctly is one of the most important health habits for seniors.',
+      steps:[
+        { t:'Set a Routine', b:'Always take medicines at the same time each day — set a reminder on this app! Consistency is key.' },
+        { t:'Never Skip Doses', b:'Never skip doses without consulting your doctor, even if you feel better. Stopping early can cause relapse.' },
+        { t:'Keep a Medicine List', b:'Maintain a written list of all your medicines with doses and timing. Share it with family members.' },
+        { t:'Use a Pill Organiser', b:'Use a weekly pill organiser (available at any pharmacy) to easily track which medicines you have taken each day.' },
+      ],
+      tip:'Never take someone else\'s medicine, even if the symptoms seem similar. Always consult your doctor first.'
+    },
+  ],
+  digital: [
+    {
+      id:'whatsapp', icon:'📱', bg:'#D4F0E0', title:'Using WhatsApp', sub:'Send messages, photos & voice notes', time:'7 min', level:'Beginner',
+      intro:'WhatsApp is one of the easiest ways to stay connected with family and friends around the world.',
+      steps:[
+        { t:'Send a Text Message', b:'Open WhatsApp → tap a contact name → type your message in the box at the bottom → tap the green ➤ button.' },
+        { t:'Send a Voice Note', b:'Hold the 🎤 microphone icon and speak. Release to send automatically — no typing needed!' },
+        { t:'Send a Photo', b:'Tap the paperclip 📎 icon → choose "Gallery" → select your photo → tap the send button.' },
+        { t:'Video Call', b:'Open a contact → tap the video camera icon 📹 at the top right to start a face-to-face video call.' },
+      ],
+      tip:'Increase WhatsApp text size: Settings → Chats → Font Size → choose Large for easier reading.'
+    },
+    {
+      id:'online-safety', icon:'🔒', bg:'#EDE5F8', title:'Staying Safe Online', sub:'Avoid scams & protect yourself', time:'6 min', level:'Important',
+      intro:'Online scams often target seniors. Learn to spot them and stay completely safe.',
+      steps:[
+        { t:'Never Share OTPs', b:'Never share OTPs or passwords with anyone — not even people claiming to be from your bank or government.' },
+        { t:'Spot Scam Offers', b:'If someone promises free prizes, lottery winnings, or asks you to send money first — it is always a scam.' },
+        { t:'Download Safely', b:'Only download apps from official stores (Play Store or App Store). Never click links in unknown WhatsApp messages.' },
+        { t:'When in Doubt, Call Family', b:'If anything feels suspicious online, put the phone down and call a trusted family member before doing anything.' },
+      ],
+      tip:'Real banks and government agencies NEVER ask for your PIN or OTP over the phone or in a message. Ever.'
+    },
+    {
+      id:'video-call', icon:'🎥', bg:'#D6EAFA', title:'Video Calling (Zoom / Meet)', sub:'See and talk to loved ones far away', time:'5 min', level:'Beginner',
+      intro:'Video calling lets you see and hear your loved ones as if they were right there with you.',
+      steps:[
+        { t:'Get the Link', b:'Ask a family member to send you a meeting link via WhatsApp. You do not need to set up anything yourself.' },
+        { t:'Join the Call', b:'Tap the link they send you. The Zoom or Google Meet app will open automatically on your phone.' },
+        { t:'Allow Permissions', b:'Tap "Join" and allow access to your camera and microphone when the phone asks. This is safe and necessary.' },
+        { t:'Mute & Camera Controls', b:'Tap the microphone icon to mute/unmute yourself. Tap the camera icon to turn your video on or off.' },
+      ],
+      tip:'Prop your phone against a book so you don\'t have to hold it. Make sure light is in front of your face!'
+    },
+    {
+      id:'shopping', icon:'🛒', bg:'#FDE8D5', title:'Online Shopping Basics', sub:'Shop safely and confidently from home', time:'6 min', level:'Beginner',
+      intro:'Online shopping lets you buy anything from the comfort of your home without going out.',
+      steps:[
+        { t:'Choose Trusted Apps', b:'Only shop on trusted apps like Amazon, Flipkart, or Big Basket. Look for the padlock 🔒 in the address bar.' },
+        { t:'Search & Read Reviews', b:'Search for what you need, read the product description and star ratings before adding to your cart.' },
+        { t:'Use Cash on Delivery', b:'Choose "Cash on Delivery" (COD) if you\'re not comfortable with online payment. Pay only when the item arrives.' },
+        { t:'Keep Your Receipt', b:'Keep the order confirmation message until your product arrives safely. Note the expected delivery date.' },
+      ],
+      tip:'If a price seems too good to be true, it probably is. Compare prices across 2–3 apps before buying.'
+    },
+  ],
+  finance: [
+    {
+      id:'bank-accounts', icon:'🏦', bg:'#FFF3C4', title:'Understanding Bank Accounts', sub:'Savings, FD, and pension explained', time:'7 min', level:'Beginner',
+      intro:'Understanding your banking options helps you make the most of your money safely.',
+      steps:[
+        { t:'Savings Account', b:'Your regular account for daily use. Keep 2–3 months\' expenses here for easy access and transactions.' },
+        { t:'Fixed Deposit (FD)', b:'A safe way to earn more interest than a savings account. Lock money for a fixed period (6 months to 5 years).' },
+        { t:'Senior Citizen Savings Scheme', b:'A government scheme offering higher interest rates specially for people aged 60+. Available at all banks and post offices.' },
+        { t:'Review Monthly', b:'Check your bank passbook or app at least once a month to spot any unknown transactions immediately.' },
+      ],
+      tip:'Nominate a trusted family member in ALL your bank accounts and insurance policies. This prevents complications later.'
+    },
+    {
+      id:'upi', icon:'💳', bg:'#D4F0E0', title:'Using UPI & Digital Payments', sub:'Pay safely without cash', time:'5 min', level:'Easy',
+      intro:'UPI apps like PhonePe, Google Pay, and Paytm let you pay and receive money instantly and safely.',
+      steps:[
+        { t:'Open Your UPI App', b:'Open PhonePe, Google Pay, or Paytm → tap "Send Money" → scan the shop\'s QR code or enter a phone number.' },
+        { t:'Verify & Pay', b:'Enter the amount, double-check the recipient\'s name shown on screen, then enter your UPI PIN to confirm.' },
+        { t:'Protect Your PIN', b:'NEVER share your UPI PIN with anyone — not shop owners, phone helpers, or people claiming to help you pay.' },
+        { t:'Know the Golden Rule', b:'You only enter your PIN to SEND money, never to RECEIVE money. Anyone asking for PIN to send you money is a scammer.' },
+      ],
+      tip:'No one can steal money just by scanning a QR code — you always need to confirm with your PIN first.'
+    },
+    {
+      id:'will', icon:'📄', bg:'#FCDEDE', title:'Will & Nominations', sub:'Plan ahead for your family\'s peace of mind', time:'8 min', level:'Important',
+      intro:'A Will and proper nominations protect your family from legal disputes and difficulties later.',
+      steps:[
+        { t:'What is a Will?', b:'A Will states who should receive your assets (property, money, jewellery) after you. It prevents family disputes.' },
+        { t:'Writing a Simple Will', b:'Write a Will yourself on ₹500 stamp paper, signed by 2 witnesses. It does not need registration, but registration makes it stronger.' },
+        { t:'Add Nominees', b:'Ensure ALL your bank accounts, insurance, PPF, and property documents have a nominated beneficiary listed.' },
+        { t:'Store Documents Safely', b:'Keep Aadhar, PAN, land papers, and Will in a fireproof safe. Tell a trusted family member where they are.' },
+      ],
+      tip:'Review and update your Will after major life events like the death of a spouse, birth of grandchildren, or new property.'
+    },
+  ],
+  spiritual: [
+    {
+      id:'meditation', icon:'🧘', bg:'#FFF3C4', title:'Meditation for Beginners', sub:'Find inner peace in 10 minutes a day', time:'6 min', level:'Beginner',
+      intro:'Meditation is one of the most powerful practices for peace of mind, available to anyone at any age.',
+      steps:[
+        { t:'Find Your Seat', b:'Sit comfortably in a chair or on the floor with your back straight. You do not need to sit cross-legged.' },
+        { t:'Close Your Eyes', b:'Close your eyes gently and take 3 slow, deep breaths. Let your body relax completely with each exhale.' },
+        { t:'Focus on the Breath', b:'Bring your attention to your breath — notice it flowing in and out. When thoughts wander, gently return focus.' },
+        { t:'Start Small', b:'Begin with just 5–10 minutes each morning. As it becomes comfortable, gradually increase to 20 minutes.' },
+      ],
+      tip:'Daily meditation reduces blood pressure, improves sleep, decreases anxiety, and cultivates deep inner peace.'
+    },
+    {
+      id:'gratitude', icon:'🙏', bg:'#EDE5F8', title:'The Power of Gratitude', sub:'Transform your mind with thankfulness', time:'4 min', level:'Easy',
+      intro:'Gratitude is one of the most powerful spiritual practices found in every major tradition worldwide.',
+      steps:[
+        { t:'Morning Gratitude', b:'Each morning, name 3 things you are thankful for — your health, your family, the sunrise, a warm meal.' },
+        { t:'Express Gratitude Directly', b:'Tell the people around you "thank you" with a genuine smile. This creates deep, lasting bonds.' },
+        { t:'Find Good in Difficulty', b:'In difficult moments, search for one small thing that is still positive. This builds remarkable resilience.' },
+        { t:'Gratitude Journal', b:'Write 3 grateful thoughts each evening. Research shows this simple habit significantly increases happiness.' },
+      ],
+      tip:'"When you are grateful, fear disappears and abundance appears." Keep a small gratitude notebook by your bed.'
+    },
+    {
+      id:'puja', icon:'🕯️', bg:'#D4F0E0', title:'Daily Puja & Worship', sub:'Simple morning ritual for blessings', time:'5 min', level:'Beginner',
+      intro:'A simple daily puja creates a sacred routine that brings peace, focus, and a sense of divine connection.',
+      steps:[
+        { t:'Cleanse & Prepare', b:'Begin with a bath or washing your face and hands before puja. Physical cleanliness reflects inner purity.' },
+        { t:'Light a Diya', b:'Light a ghee or oil lamp — it symbolises the removal of darkness, ignorance, and negativity from your life.' },
+        { t:'Offer Flowers', b:'Place fresh flowers or tulsi leaves before your deity as an expression of love, beauty, and devotion.' },
+        { t:'Chant & Pray', b:'Recite a favourite mantra, bhajan, or simply speak from your heart. God listens to sincerity, not perfection.' },
+      ],
+      tip:'The goal of puja is not ritual performance alone, but developing a living, loving relationship with the Divine.'
+    },
+    {
+      id:'japa', icon:'📿', bg:'#FDE8D5', title:'Japa — Mantra Chanting', sub:'The practice of sacred repetition', time:'5 min', level:'Beginner',
+      intro:'Japa means the silent or spoken repetition of God\'s name. It is simple, profound, and transformative.',
+      steps:[
+        { t:'Choose Your Mantra', b:'Pick a mantra that resonates: "Om Namah Shivaya", "Jai Shri Ram", "Om", or any Divine name you love.' },
+        { t:'Use a Mala', b:'Use a mala (108-bead rosary) to count repetitions. One full round = 108 repetitions, one "round of japa".' },
+        { t:'Practice Daily', b:'Sit quietly, close your eyes, and chant mentally or softly. Hold the bead, move to the next after each repetition.' },
+        { t:'Deepen Over Time', b:'Begin with 1 round (108 repetitions) daily. Gradually increase to 3, then 5 rounds as your practice deepens.' },
+      ],
+      tip:'Even 10–15 minutes of daily Japa can bring profound peace, mental clarity, and spiritual progress over time.'
+    },
+  ],
+};
+
+/* ── LESSON RENDERING ── */
+let completedLessons = new Set();
+function renderLessons(category) {
+  const data = lessons[category];
+  const container = document.getElementById(category + '-lessons');
+  container.innerHTML = data.map((l, i) => {
+    const done = completedLessons.has(l.id);
+    const progress = done ? 0 : 95;
+    return `<div class="lesson-card${''}" id="lcard-${l.id}">
+      <div class="lc-header" onclick="toggleLesson('${l.id}')">
+        <div class="lc-icon" style="background:${l.bg}">${l.icon}</div>
+        <div class="lc-info">
+          <div class="lc-title">${l.title}</div>
+          <div class="lc-sub">${l.sub}</div>
+          <div class="lc-badges">
+            <span class="lc-badge" style="background:${l.bg};color:var(--ink-mid)">⏱ ${l.time}</span>
+            <span class="lc-badge" style="background:${done?'var(--green-s)':'var(--indigo-s)'};color:${done?'var(--green)':'var(--indigo)'}">${done?'✓ Done':l.level}</span>
+          </div>
+        </div>
+        <svg class="lc-progress" width="36" height="36" viewBox="0 0 36 36">
+          <circle class="lcp-bg" cx="18" cy="18" r="15"/>
+          <circle class="lcp-fill" cx="18" cy="18" r="15"
+            style="stroke-dashoffset:${done?0:95};stroke:${done?'var(--green)':'var(--indigo)'}"/>
+        </svg>
+        <div class="lc-arrow">›</div>
+      </div>
+      <div class="lc-body" id="lbody-${l.id}">
+        <div class="lc-body-inner">
+          <p class="lc-intro">${l.intro}</p>
+          <div class="steps">
+            ${l.steps.map((s,si) => `
+              <div class="step">
+                <div class="step-num">${si+1}</div>
+                <div class="step-text"><strong>${s.t}:</strong> ${s.b}</div>
+              </div>`).join('')}
+          </div>
+          <div class="tip-box"><strong>💡 Tip:</strong> ${l.tip}</div>
+          <button class="mark-done-btn${done?' done-state':''}" id="mbtn-${l.id}" onclick="markDone('${l.id}')">
+            ${done ? '✅ Completed — Well Done!' : '✓ Mark as Complete'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openLesson(id) {
+  // find what category
+  for (const cat in lessons) {
+    const found = lessons[cat].find(l => l.id === id);
+    if (found) {
+      const secEl = document.getElementById('sec-' + cat);
+      if (secEl) secEl.scrollIntoView({ behavior:'smooth', block:'start' });
+      setTimeout(() => toggleLesson(id), 400);
+    }
+  }
+}
+
+function toggleLesson(id) {
+  const card  = document.getElementById('lcard-' + id);
+  const body  = document.getElementById('lbody-' + id);
+  if (!card) return;
+  const isOpen = card.classList.contains('open');
+  // close all others in same container
+  card.parentElement.querySelectorAll('.lesson-card.open').forEach(c => {
+    c.classList.remove('open');
+  });
+  if (!isOpen) { card.classList.add('open'); }
+}
+
+function markDone(id) {
+  if (completedLessons.has(id)) return;
+  completedLessons.add(id);
+  const btn = document.getElementById('mbtn-' + id);
+  btn.textContent = '✅ Completed — Well Done!';
+  btn.classList.add('done-state');
+  // update progress ring
+  const card = document.getElementById('lcard-' + id);
+  const ring = card.querySelector('.lcp-fill');
+  if (ring) { ring.style.strokeDashoffset = '0'; ring.style.stroke = 'var(--green)'; }
+  const badge = card.querySelectorAll('.lc-badge')[1];
+  if (badge) { badge.style.background = 'var(--green-s)'; badge.style.color = 'var(--green)'; badge.textContent = '✓ Done'; }
+  addXP(50);
+  toast('🎉 Lesson complete! +50 XP earned!');
+}
+
+// Init all lesson lists
+Object.keys(lessons).forEach(cat => renderLessons(cat));
+
+/* ── QUIZ ── */
+const quizData = [
+  { q:'What is a healthy blood pressure reading?', opts:['160/100','120/80','90/60','140/90'], ans:1 },
+  { q:'How many glasses of water should seniors drink daily?', opts:['2–3 glasses','4–5 glasses','6–8 glasses','10+ glasses'], ans:2 },
+  { q:'What does OTP stand for?', opts:['Online Transfer Payment','One Time Password','Optional Transfer Protocol','Open Transfer Page'], ans:1 },
+  { q:'Which of these is the safest for online shopping?', opts:['Unknown website with low prices','Cash on Delivery from trusted apps','Clicking WhatsApp shopping links','Sharing card details over phone'], ans:1 },
+  { q:'What is a Fixed Deposit (FD)?', opts:['A type of insurance','A loan from the bank','Savings locked for a period earning interest','A government pension scheme'], ans:2 },
+  { q:'Which vitamin does sunlight help your body produce?', opts:['Vitamin A','Vitamin B12','Vitamin C','Vitamin D'], ans:3 },
+  { q:'What does Japa mean in spiritual practice?', opts:['A type of yoga pose','Repetition of a mantra','A fasting ritual','Morning puja'], ans:1 },
+  { q:'What is the emergency number in India?', opts:['100','108','112','911'], ans:2 },
+];
+let qIdx = 0, answered = false;
+let qCorrect = 0, qTried = 0;
+
+function renderQuiz() {
+  answered = false;
+  const q = quizData[qIdx];
+  document.getElementById('quizQ').textContent = q.q;
+  document.getElementById('qResult').style.display = 'none';
+  document.getElementById('qNext').style.display = 'none';
+  document.getElementById('quizOpts').innerHTML = q.opts.map((o, i) => `
+    <button class="q-opt" onclick="answerQuiz(${i})">
+      <span style="width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0">${String.fromCharCode(65+i)}</span>
+      ${o}
+    </button>`).join('');
+  document.getElementById('quizScore').textContent = `Score: ${qCorrect} / ${qTried}`;
+}
+
+function answerQuiz(i) {
+  if (answered) return;
+  answered = true;
+  const q = quizData[qIdx];
+  const btns = document.querySelectorAll('.q-opt');
+  btns.forEach(b => b.disabled = true);
+  btns[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+  if (i !== q.ans) btns[q.ans].classList.add('correct');
+  qTried++;
+  if (i === q.ans) { qCorrect++; toast('🎉 Correct! +10 XP'); xp += 10; }
+  else toast('❌ Not quite — see the green answer');
+  document.getElementById('quizScore').textContent = `Score: ${qCorrect} / ${qTried}`;
+  document.getElementById('xpQuiz').textContent = `${qCorrect}/${qTried}`;
+  document.getElementById('xpPts').textContent = xp + ' XP';
+  const pct = Math.min(xp/300*100,100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  const res = document.getElementById('qResult');
+  res.textContent = i === q.ans ? '🎉 Correct! Excellent!' : `❌ The correct answer was: ${q.opts[q.ans]}`;
+  res.className = 'q-result ' + (i === q.ans ? 'ok' : 'bad');
+  res.style.display = 'block';
+  document.getElementById('qNext').style.display = 'inline-block';
+}
+
+function nextQuiz() {
+  qIdx = (qIdx + 1) % quizData.length;
+  renderQuiz();
+}
+renderQuiz();
+
+/* ── HOBBIES ── */
+const hobbies = [
+  { id:'drawing',   ico:'✏️', name:'Drawing',    desc:'Express yourself', color:'#FDE8D5',
+    tips:['Start with simple shapes — circles, leaves, cups. Do not worry about perfection.','Draw something around you daily — a shoe, a flower, a chair. Just 15 minutes!','Drawing reduces anxiety, improves focus, and brings deep personal satisfaction.'] },
+  { id:'gardening', ico:'🌱', name:'Gardening',  desc:'Grow & nurture',   color:'#D4F0E0',
+    tips:['Start with just one pot — try tulsi, mint, or coriander on a balcony or windowsill.','Water plants in the morning and ensure 2–3 hours of sunlight daily.','Gardening improves mood, reduces stress, and gives a beautiful sense of achievement.'] },
+  { id:'cooking',   ico:'🍳', name:'Cooking',    desc:'Create & nourish',  color:'#FFF3C4',
+    tips:['Try one new dish each week — a healthy snack, a new chutney, or a traditional dessert.','Ask grandchildren for their favourite recipe — cooking together creates wonderful memories.','Write down your own family recipes to pass down this precious knowledge to future generations.'] },
+  { id:'writing',   ico:'📝', name:'Journaling', desc:'Reflect & remember', color:'#EDE5F8',
+    tips:['Each morning write 3 things you are grateful for. This is proven to increase daily happiness.','Write memories, life lessons, and stories from your youth — your wisdom is truly precious.','Journal writing improves memory, reduces anxiety, and creates a beautiful family legacy.'] },
+  { id:'music',     ico:'🎵', name:'Music',      desc:'Sing & listen',     color:'#D6EAFA',
+    tips:['Listen to your favourite old songs daily. Music from your youth evokes happy memories.','Try humming or singing along. Vocalization reduces stress and lowers blood pressure naturally.','Consider learning a simple instrument — harmonium, flute, or ukulele. Many free lessons on YouTube!'] },
+  { id:'craft',     ico:'🧶', name:'Crafts',     desc:'Make & create',     color:'#FCDEDE',
+    tips:['Start with simple projects — a small scarf or a dishcloth. Available at any craft store.','Search "knitting for beginners" on YouTube for easy step-by-step guides in Hindi or English.','Crafts improve hand coordination, reduce arthritis pain, and give a deep sense of accomplishment.'] },
+];
+
+let activeHobby = null;
+function renderHobbies() {
+  document.getElementById('hobbyGrid').innerHTML = hobbies.map(h => `
+    <div class="hobby-card${activeHobby===h.id?' active':''}" id="hcard-${h.id}" onclick="openHobby('${h.id}')">
+      <span class="hb-ico">${h.ico}</span>
+      <div class="hb-name">${h.name}</div>
+      <div class="hb-desc">${h.desc}</div>
+    </div>`).join('');
+}
+
+function openHobby(id) {
+  if (activeHobby === id) {
+    activeHobby = null;
+    renderHobbies();
+    document.getElementById('hobbyDetail').innerHTML = '';
+    return;
+  }
+  activeHobby = id;
+  renderHobbies();
+  const h = hobbies.find(x => x.id === id);
+  document.getElementById('hobbyDetail').innerHTML = `
+    <div class="hobby-detail active" style="border-color:${h.color.replace('0.','0.8')};">
+      <div class="hd-title">${h.ico} ${h.name} — Getting Started</div>
+      <div class="steps">
+        ${h.tips.map((t,i)=>`<div class="step"><div class="step-num">${i+1}</div><div class="step-text">${t}</div></div>`).join('')}
+      </div>
+      <div class="tip-box" style="background:${h.color};border-color:var(--indigo);">
+        <strong>💡 Why this matters:</strong> Hobbies keep the mind active, reduce loneliness, lower stress, and bring genuine daily joy. Even 15 minutes a day makes a real difference.
+      </div>
+    </div>`;
+  document.getElementById('hobbyDetail').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+renderHobbies();
+
+/* ── MANTRAS ── */
+const mantras = [
+  { sym:'🕉️', text:'Om Namah Shivaya',  meaning:'I bow to Lord Shiva — the universal consciousness dwelling within me.' },
+  { sym:'🌸', text:'Om Mani Padme Hum', meaning:'The jewel of compassion and wisdom lies within the lotus of the heart.' },
+  { sym:'🙏', text:'Jai Shri Ram',       meaning:'Victory to Lord Rama — a salutation to virtue, truth, and righteousness.' },
+  { sym:'✨', text:'Gayatri Mantra',     meaning:'We meditate on the divine light of the Supreme Being. May it illuminate our minds and guide us.' },
+  { sym:'🌺', text:'Om Shanti Shanti Shanti', meaning:'Peace — in body, mind, and spirit. May peace pervade everywhere and in everyone.' },
+  { sym:'💛', text:'So Hum',            meaning:'I am That — a reminder that our true self is eternally one with the universe.' },
+  { sym:'🕯️', text:'Asato Ma Sad Gamaya', meaning:'Lead me from untruth to truth, from darkness to light, from mortality to immortality.' },
+];
+let mIdx = 0;
+function renderMantra() {
+  const m = mantras[mIdx];
+  document.getElementById('mantraSym').textContent   = m.sym;
+  document.getElementById('mantraText').textContent  = m.text;
+  document.getElementById('mantraMean').textContent  = m.meaning;
+}
+function nextMantra() { mIdx = (mIdx+1) % mantras.length; renderMantra(); toast('🕉️ New mantra loaded'); }
+function prevMantra() { mIdx = (mIdx-1+mantras.length) % mantras.length; renderMantra(); }
+renderMantra();
+
+/* ── FINANCE TRACKER ── */
+let finItems = [];
+const finCatIcos = { expense:'📤', income:'📥' };
+function addFinItem() {
+  const name = document.getElementById('finName').value.trim();
+  const amt  = parseFloat(document.getElementById('finAmt').value);
+  const type = document.getElementById('finType').value;
+  if (!name || isNaN(amt) || amt <= 0) { toast('⚠️ Enter name and amount'); return; }
+  finItems.push({ name, amt, type, date: new Date().toLocaleDateString('en-IN') });
+  document.getElementById('finName').value = '';
+  document.getElementById('finAmt').value  = '';
+  renderFin();
+  toast(`✅ ${type==='income'?'Income':'Expense'} added!`);
+}
+function renderFin() {
+  const income  = finItems.filter(f=>f.type==='income').reduce((s,f)=>s+f.amt,0);
+  const expense = finItems.filter(f=>f.type==='expense').reduce((s,f)=>s+f.amt,0);
+  const bal = income - expense;
+  document.getElementById('finSummary').innerHTML = `
+    <div class="fin-sum-card"><div class="fin-sum-ico">📥</div><div class="fin-sum-val" style="color:var(--green)">₹${income.toLocaleString()}</div><div class="fin-sum-lbl">Income</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-ico">📤</div><div class="fin-sum-val" style="color:var(--red)">₹${expense.toLocaleString()}</div><div class="fin-sum-lbl">Spent</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-ico">💰</div><div class="fin-sum-val" style="color:${bal>=0?'var(--green)':'var(--red)'}">₹${Math.abs(bal).toLocaleString()}</div><div class="fin-sum-lbl">Balance</div></div>`;
+  document.getElementById('finList').innerHTML = finItems.slice().reverse().map(f => `
+    <div class="fin-item ${f.type}">
+      <div class="fin-item-l">
+        <span class="fin-item-ico">${finCatIcos[f.type]}</span>
+        <div><div class="fin-item-name">${f.name}</div><div class="fin-item-date">${f.date}</div></div>
+      </div>
+      <div class="fin-item-amt">${f.type==='income'?'+':'-'}₹${f.amt.toLocaleString()}</div>
+    </div>`).join('') || '<div style="text-align:center;color:var(--ink-pale);padding:14px;font-size:.88rem;font-weight:700;">Add your first income or expense above</div>';
+}
+renderFin();
+
+/* ── BREATHING ── */
+let breathing = false, breathTimer;
+function toggleBreath() {
+  breathing = !breathing;
+  const btn = document.getElementById('breathBtn');
+  if (breathing) {
+    btn.textContent = '⏹ Stop';
+    breathCycle();
+  } else {
+    clearTimeout(breathTimer);
+    btn.textContent = '▶ Start';
+    document.getElementById('breathCircle').className = 'breath-circle';
+    document.getElementById('breathCircle').textContent = 'Ready';
+    document.getElementById('breathLbl').textContent = 'Press Start to begin';
+  }
+}
+function breathCycle() {
+  if (!breathing) return;
+  const c = document.getElementById('breathCircle');
+  const l = document.getElementById('breathLbl');
+  c.textContent = 'Inhale…'; c.className = 'breath-circle inhale';
+  l.textContent = 'Breathe in deeply for 4 seconds';
+  breathTimer = setTimeout(() => {
+    if (!breathing) return;
+    c.textContent = 'Hold'; c.className = 'breath-circle';
+    l.textContent = 'Hold gently for 4 seconds';
+    breathTimer = setTimeout(() => {
+      if (!breathing) return;
+      c.textContent = 'Exhale…'; c.className = 'breath-circle exhale';
+      l.textContent = 'Breathe out slowly for 4 seconds';
+      breathTimer = setTimeout(() => breathCycle(), 4000);
+    }, 4000);
+  }, 4000);
+}
+
+// init XP bar with tiny delay for animation
+setTimeout(() => {
+  document.getElementById('xpFill').style.width = '12%';
+  document.getElementById('xpPts').textContent = '36 XP';
+}, 300);
+</script>
+</body>
+</html>

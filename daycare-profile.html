@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DayCare — My Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --sun:      #E07B39;
+  --sun-dk:   #B85D1E;
+  --sun-lt:   #F5A96A;
+  --sun-soft: #FDE8D5;
+  --cream:    #FFF8F0;
+  --white:    #FFFFFF;
+  --ink:      #1E1A17;
+  --ink-mid:  #5A5047;
+  --ink-pale: #A0917F;
+  --border:   #EDE0D2;
+  --green:    #3E9E6F;
+  --green-s:  #D4F0E4;
+  --red:      #D94032;
+  --red-s:    #FCDEDE;
+  --blue:     #3A7FBF;
+  --blue-s:   #D6EAFA;
+  --gold:     #C07B00;
+  --gold-s:   #FFF3C4;
+  --purple:   #6E4FA0;
+  --purple-s: #EDE5F8;
+
+  --r-sm:   12px;
+  --r-md:   18px;
+  --r-lg:   24px;
+  --r-xl:   32px;
+  --shadow: 0 4px 24px rgba(30,26,23,.09);
+  --shadow-pop: 0 10px 40px rgba(30,26,23,.16);
+
+  --fs: 17px; /* base, adjustable */
+}
+
+/* ─── RESET & BASE ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  font-size: var(--fs);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: 100px;
+  overflow-x: hidden;
+}
+
+/* ─── HIGH CONTRAST OVERRIDE ────────────────────────── */
+body.hc {
+  --cream:    #0A0A0A;
+  --white:    #161616;
+  --ink:      #F5F5F5;
+  --ink-mid:  #BBBBBB;
+  --ink-pale: #888888;
+  --border:   #333333;
+  --sun-soft: #2A1500;
+  --shadow:   0 4px 24px rgba(0,0,0,.6);
+}
+body.hc .hero-bg { background: linear-gradient(160deg,#2A1200,#1A0D00); }
+body.hc .nav-bar { background: #161616; border-top-color: #333; }
+body.hc .tag { background: rgba(255,255,255,.08); color: #ccc; }
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero-bg {
+  background: linear-gradient(160deg, var(--sun) 0%, var(--sun-dk) 55%, #8B3A10 100%);
+  padding: 0 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  top: -100px; right: -80px;
+  pointer-events: none;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  bottom: -60px; left: -40px;
+  pointer-events: none;
+}
+
+/* top bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px 0;
+}
+.back-btn {
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.35);
+  border-radius: 50%;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: background .2s;
+}
+.back-btn:hover { background: rgba(255,255,255,.28); }
+.top-bar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  color: rgba(255,255,255,.9);
+  font-weight: 700;
+}
+.top-bar-right { width: 42px; }
+
+/* avatar block */
+.avatar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 28px;
+  position: relative;
+}
+.avatar-ring {
+  width: 108px; height: 108px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  border: 4px solid rgba(255,255,255,.7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+  box-shadow: 0 6px 28px rgba(0,0,0,.25);
+}
+.avatar-ring:hover { transform: scale(1.04); }
+.avatar-ring img { width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 50%; }
+.avatar-cam {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,.45);
+  text-align: center;
+  font-size: .7rem; color: white;
+  padding: 5px 0;
+  font-weight: 700;
+}
+.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+  margin-top: 14px;
+  text-align: center;
+  line-height: 1.2;
+}
+.hero-sub {
+  color: rgba(255,255,255,.8);
+  font-size: .92rem;
+  margin-top: 5px;
+  text-align: center;
+}
+.hero-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 12px;
+}
+.tag {
+  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: .8rem;
+  color: rgba(255,255,255,.95);
+  font-weight: 700;
+}
+.edit-profile-btn {
+  margin-top: 16px;
+  background: rgba(255,255,255,.15);
+  border: 2px solid rgba(255,255,255,.5);
+  border-radius: 30px;
+  padding: 10px 24px;
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.edit-profile-btn:hover { background: rgba(255,255,255,.28); }
+
+/* health stat bar */
+.stat-bar {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  margin-top: 22px;
+  position: relative; z-index: 2;
+}
+.stat-card {
+  flex: 1;
+  background: var(--white);
+  border-radius: var(--r-md);
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  animation: slideUp .5s ease both;
+}
+.stat-card:nth-child(2) { animation-delay: .08s; }
+.stat-card:nth-child(3) { animation-delay: .16s; }
+.stat-card:nth-child(4) { animation-delay: .24s; }
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(18px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.stat-icon { font-size: 1.4rem; margin-bottom: 4px; }
+.stat-val  { font-size: 1.1rem; font-weight: 900; color: var(--ink); }
+.stat-lbl  { font-size: .7rem; color: var(--ink-pale); font-weight: 700; margin-top: 2px; }
+
+/* ─── EDIT FORM DRAWER ───────────────────────────────── */
+.drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open { max-height: 1000px; }
+.drawer-inner {
+  background: var(--white);
+  margin: 16px 18px 0;
+  border-radius: var(--r-lg);
+  padding: 22px 20px;
+  box-shadow: var(--shadow);
+  animation: pop-in .25s ease;
+}
+@keyframes pop-in {
+  from { opacity:0; transform:scale(.95); }
+  to   { opacity:1; transform:scale(1); }
+}
+.field-label { font-size: .82rem; font-weight: 800; color: var(--ink-pale); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .8px; }
+.field-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+  transition: border .2s, box-shadow .2s;
+  margin-bottom: 14px;
+}
+.field-input:focus { border-color: var(--sun); box-shadow: 0 0 0 4px rgba(224,123,57,.12); }
+.field-row { display: flex; gap: 10px; }
+.field-row > div { flex: 1; }
+.save-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--sun), var(--sun-dk));
+  color: white;
+  border: none;
+  border-radius: var(--r-md);
+  padding: 15px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(224,123,57,.4);
+  transition: all .2s;
+  margin-top: 4px;
+}
+.save-btn:hover { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(224,123,57,.45); }
+.save-btn:active { transform: translateY(0); }
+
+/* ─── SECTION GROUPS ─────────────────────────────────── */
+.section-group { padding: 22px 18px 0; }
+.section-label {
+  font-size: .75rem; font-weight: 900;
+  color: var(--ink-pale);
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+.settings-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* ─── SETTING ROW ────────────────────────────────────── */
+.s-row {
+  display: flex; align-items: center;
+  padding: 18px 20px;
+  gap: 15px;
+  border-bottom: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.s-row:last-child { border-bottom: none; }
+.s-row:hover { background: var(--cream); }
+.s-row.no-tap { cursor: default; }
+.s-row.no-tap:hover { background: none; }
+
+.s-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.45rem;
+  flex-shrink: 0;
+}
+.s-info { flex: 1; min-width: 0; }
+.s-name { font-size: 1rem; font-weight: 800; }
+.s-desc { font-size: .82rem; color: var(--ink-pale); margin-top: 2px; line-height: 1.4; }
+.s-caret {
+  font-size: 1.2rem; color: var(--ink-pale);
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+.s-caret.open { transform: rotate(90deg); }
+
+/* ─── TOGGLE ─────────────────────────────────────────── */
+.tog {
+  position: relative;
+  width: 54px; height: 30px;
+  flex-shrink: 0;
+}
+.tog input { opacity: 0; width: 0; height: 0; }
+.tog-slider {
+  position: absolute; inset: 0;
+  background: #CBD5D8;
+  border-radius: 30px;
+  transition: background .25s;
+  cursor: pointer;
+}
+.tog-slider::before {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  left: 4px; bottom: 4px;
+  background: white;
+  border-radius: 50%;
+  transition: transform .25s;
+  box-shadow: 0 1px 5px rgba(0,0,0,.2);
+}
+input:checked + .tog-slider { background: var(--green); }
+input:checked + .tog-slider::before { transform: translateX(24px); }
+
+/* ─── EXPAND PANEL ───────────────────────────────────── */
+.expand-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .38s cubic-bezier(.4,0,.2,1);
+  background: var(--cream);
+  border-top: 0 solid var(--border);
+}
+.expand-panel.open {
+  max-height: 1200px;
+  border-top-width: 1.5px;
+}
+.expand-inner { padding: 18px 20px 20px; }
+
+/* ─── VOICE PANEL ────────────────────────────────────── */
+.voice-waves {
+  display: flex; align-items: flex-end; gap: 5px;
+  height: 44px; justify-content: center; margin: 8px 0;
+}
+.w-bar {
+  width: 5px; border-radius: 3px;
+  background: var(--sun);
+  animation: wbounce 1.1s ease-in-out infinite;
+}
+.w-bar:nth-child(1){height:12px;animation-delay:0s}
+.w-bar:nth-child(2){height:26px;animation-delay:.1s}
+.w-bar:nth-child(3){height:40px;animation-delay:.2s}
+.w-bar:nth-child(4){height:26px;animation-delay:.3s}
+.w-bar:nth-child(5){height:12px;animation-delay:.4s}
+@keyframes wbounce {
+  0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}
+}
+#voiceWaves { display: none; }
+.voice-status { text-align:center; font-size:.9rem; font-weight:700; color:var(--ink-pale); margin: 6px 0 14px; }
+.speak-btn {
+  display: block; margin: 0 auto;
+  background: linear-gradient(135deg,var(--sun),var(--sun-dk));
+  color: white;
+  border: none; border-radius: 40px;
+  padding: 14px 32px;
+  font-family:'Nunito',sans-serif; font-size:1rem; font-weight:900;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(224,123,57,.4);
+  transition: all .2s;
+}
+.speak-btn:active { transform:scale(.97); }
+.speak-btn.live { background: linear-gradient(135deg,var(--red),#A0291F); box-shadow:0 4px 16px rgba(217,64,50,.5); }
+.voice-chips { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+.vc {
+  background:var(--white); border-radius:12px; padding:12px 15px;
+  display:flex; align-items:center; gap:12px;
+  font-size:.9rem; font-weight:700; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  transition:background .15s, transform .15s;
+  border: 1.5px solid var(--border);
+}
+.vc:hover { background:var(--sun-soft); border-color:var(--sun-lt); transform:translateX(3px); }
+.vc-ico { font-size:1.1rem; }
+.vc-lbl { flex:1; }
+.vc-arr { color:var(--ink-pale); font-size:.9rem; }
+
+/* ─── FONT SIZE ──────────────────────────────────────── */
+.font-size-visual {
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; margin-bottom:14px;
+}
+.font-preview {
+  font-family:'Playfair Display',serif;
+  font-size:2rem; font-weight:800;
+  color:var(--sun);
+  transition:font-size .3s;
+}
+.font-sub { font-size:.85rem; color:var(--ink-pale); font-weight:700; }
+.font-btns-row { display:flex; gap:8px; }
+.fb {
+  flex:1; padding:12px 6px;
+  border:2px solid var(--border);
+  border-radius:12px;
+  background:var(--cream);
+  font-family:'Nunito',sans-serif; font-weight:900;
+  color:var(--ink-pale); cursor:pointer;
+  text-align:center; transition:all .2s;
+}
+.fb.sel { background:var(--sun-soft); border-color:var(--sun); color:var(--sun); }
+.fb span { display:block; font-size:.7rem; margin-top:3px; font-weight:700; color:var(--ink-pale); }
+
+/* ─── NOTIFICATION ITEMS ─────────────────────────────── */
+.notif-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.notif-item:last-child { border-bottom:none; padding-bottom:0; }
+.notif-ico { font-size:1.2rem; margin-right:12px; }
+.notif-txt .nt { font-size:.95rem; font-weight:800; }
+.notif-txt .ns { font-size:.78rem; color:var(--ink-pale); margin-top:2px; }
+.notif-left { display:flex; align-items:center; }
+
+/* ─── EMERGENCY CONTACTS ─────────────────────────────── */
+.ec-card {
+  background:var(--white);
+  border-radius:var(--r-md);
+  padding:14px 16px;
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  border:1.5px solid var(--border);
+  animation:slideUp .3s ease both;
+}
+.ec-ava {
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem; flex-shrink:0;
+}
+.ec-info { flex:1; min-width:0; }
+.ec-name { font-size:.95rem; font-weight:800; }
+.ec-phone { font-size:.82rem; color:var(--ink-pale); margin-top:2px; }
+.ec-rel { font-size:.72rem; color:var(--sun); font-weight:700; margin-top:2px; }
+.ec-actions { display:flex; gap:8px; flex-shrink:0; }
+.ec-call { width:36px;height:36px;border-radius:50%;background:var(--green-s);border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center; transition:all .2s; }
+.ec-call:hover { background:var(--green); }
+.ec-del { width:36px;height:36px;border-radius:50%;background:var(--red-s);border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center; transition:all .2s; }
+.ec-del:hover { background:#FBBABA; }
+
+/* add form */
+.ec-add-form {
+  background:var(--white);
+  border-radius:var(--r-md);
+  padding:18px 16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  border:2px dashed var(--sun-lt);
+}
+.ec-add-title { font-size:.9rem;font-weight:900;color:var(--sun);margin-bottom:12px;display:flex;align-items:center;gap:8px; }
+.ec-input, .ec-select {
+  width:100%;
+  padding:12px 15px;
+  border:2px solid var(--border);
+  border-radius:var(--r-sm);
+  font-family:'Nunito',sans-serif;
+  font-size:.95rem; font-weight:600;
+  color:var(--ink); background:var(--cream);
+  outline:none; margin-bottom:10px;
+  transition:border .2s;
+}
+.ec-input:focus,.ec-select:focus { border-color:var(--sun); }
+.ec-add-btn {
+  width:100%;
+  background:linear-gradient(135deg,var(--sun),var(--sun-dk));
+  color:white;border:none;border-radius:var(--r-sm);
+  padding:13px;
+  font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:900;
+  cursor:pointer;
+  box-shadow:0 3px 12px rgba(224,123,57,.35);
+}
+.ec-add-btn:hover { opacity:.92; }
+
+/* ─── APP INFO ───────────────────────────────────────── */
+.app-info-card {
+  background: linear-gradient(135deg,var(--sun-soft),#FFF3E6);
+  border-radius:var(--r-lg);
+  padding:22px 20px;
+  display:flex;align-items:center;gap:16px;
+  border:1.5px solid rgba(224,123,57,.2);
+}
+.app-info-logo { font-size:2.4rem; }
+.app-info-name { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:800; }
+.app-info-ver { font-size:.82rem;color:var(--ink-pale);margin-top:3px; }
+.app-info-badge {
+  margin-left:auto;
+  background:var(--sun);color:white;
+  border-radius:30px;padding:5px 12px;
+  font-size:.75rem;font-weight:900;
+}
+
+/* ─── BOTTOM NAV ─────────────────────────────────────── */
+.nav-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--white);
+  border-top:1.5px solid var(--border);
+  display:flex;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+  z-index:99;
+}
+.nb {
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:10px 4px 12px;
+  border:none;background:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:800;
+  color:var(--ink-pale);gap:4px;
+  transition:color .2s;
+  position:relative;
+}
+.nb.active { color:var(--sun); }
+.nb.active::after {
+  content:''; position:absolute;
+  top:0;left:20%;right:20%;height:3px;
+  background:var(--sun);border-radius:0 0 4px 4px;
+}
+.nb-ico { font-size:1.45rem; transition:transform .2s; }
+.nb.active .nb-ico { transform:scale(1.15); }
+
+/* ─── TOAST ──────────────────────────────────────────── */
+.toast {
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:white;
+  padding:12px 26px;border-radius:40px;
+  font-size:.9rem;font-weight:700;
+  white-space:nowrap;
+  z-index:9999;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s, transform .3s;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ─── UTILS ──────────────────────────────────────────── */
+.mt8  { margin-top:8px; }
+.mt12 { margin-top:12px; }
+.pb100{ padding-bottom:100px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero-bg">
+
+  <div class="top-bar">
+    <a class="back-btn" onclick="toast('Going back to Home…')" title="Back">←</a>
+    <div class="top-bar-title">My Profile</div>
+    <div class="top-bar-right"></div>
+  </div>
+
+  <div class="avatar-block">
+    <div class="avatar-ring" onclick="document.getElementById('avatarInput').click()" title="Change photo">
+      <span id="avatarEmoji">👴</span>
+      <img id="avatarImg" alt="Profile photo" />
+      <div class="avatar-cam">📷 Change</div>
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="handlePhoto(event)" />
+
+    <div class="hero-name" id="heroName">Your Name</div>
+    <div class="hero-sub" id="heroSub">Tap "Edit Profile" to get started</div>
+
+    <div class="hero-tags" id="heroTags"></div>
+
+    <button class="edit-profile-btn" onclick="toggleDrawer()">
+      <span id="editBtnIco">✏️</span>
+      <span id="editBtnLbl">Edit Profile</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- profile stat bar — pulled out of hero visually via negative margin trick -->
+<div class="stat-bar" style="margin-top:-20px;">
+  <div class="stat-card">
+    <div class="stat-icon">🩸</div>
+    <div class="stat-val" id="statBlood">—</div>
+    <div class="stat-lbl">Blood Grp</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🎂</div>
+    <div class="stat-val" id="statAge">—</div>
+    <div class="stat-lbl">Age</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📍</div>
+    <div class="stat-val" id="statCity" style="font-size:.85rem;">—</div>
+    <div class="stat-lbl">City</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">💊</div>
+    <div class="stat-val" id="statHealth" style="font-size:.75rem;line-height:1.2;">—</div>
+    <div class="stat-lbl">Health</div>
+  </div>
+</div>
+
+<!-- ══════════ EDIT PROFILE DRAWER ══════════ -->
+<div class="drawer" id="profileDrawer">
+  <div class="drawer-inner">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;margin-bottom:18px;color:var(--sun);">✏️ Edit Your Profile</div>
+
+    <div class="field-row">
+      <div>
+        <div class="field-label">First Name</div>
+        <input class="field-input" id="fFirst" placeholder="e.g. Ramesh" />
+      </div>
+      <div>
+        <div class="field-label">Last Name</div>
+        <input class="field-input" id="fLast" placeholder="e.g. Sharma" />
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <div class="field-label">Age</div>
+        <input class="field-input" id="fAge" type="number" placeholder="e.g. 68" />
+      </div>
+      <div>
+        <div class="field-label">Gender</div>
+        <select class="field-input" id="fGender" style="cursor:pointer;">
+          <option value="">Select</option>
+          <option>Male</option><option>Female</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-label">City / Town</div>
+    <input class="field-input" id="fCity" placeholder="e.g. Mumbai, Maharashtra" />
+
+    <div class="field-row">
+      <div>
+        <div class="field-label">Blood Group</div>
+        <select class="field-input" id="fBlood" style="cursor:pointer;">
+          <option value="">Select</option>
+          <option>A+</option><option>A−</option><option>B+</option><option>B−</option>
+          <option>O+</option><option>O−</option><option>AB+</option><option>AB−</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">Language</div>
+        <select class="field-input" id="fLang" style="cursor:pointer;">
+          <option>English</option><option>Hindi</option><option>Marathi</option>
+          <option>Tamil</option><option>Telugu</option><option>Kannada</option><option>Bengali</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-label">Health Conditions (optional)</div>
+    <input class="field-input" id="fHealth" placeholder="e.g. Diabetes, Hypertension, Arthritis" />
+
+    <div class="field-label">Doctor's Name</div>
+    <input class="field-input" id="fDoctor" placeholder="e.g. Dr. Anita Sharma" />
+
+    <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
+  </div>
+</div>
+
+
+<!-- ══════════ ACCESSIBILITY ══════════ -->
+<div class="section-group">
+  <div class="section-label">♿ Accessibility</div>
+  <div class="settings-card">
+
+    <!-- Voice Assistance -->
+    <div class="s-row" onclick="togglePanel('voicePanel','voiceCaret')">
+      <div class="s-icon" style="background:var(--blue-s);">🔊</div>
+      <div class="s-info">
+        <div class="s-name">Voice Assistance</div>
+        <div class="s-desc">Read content aloud using text-to-speech</div>
+      </div>
+      <div class="s-caret" id="voiceCaret">›</div>
+    </div>
+    <div class="expand-panel" id="voicePanel">
+      <div class="expand-inner">
+        <div class="voice-waves" id="voiceWaves">
+          <div class="w-bar"></div><div class="w-bar"></div><div class="w-bar"></div>
+          <div class="w-bar"></div><div class="w-bar"></div>
+        </div>
+        <div class="voice-status" id="voiceSt">Tap to hear your profile summary read aloud</div>
+        <button class="speak-btn" id="speakBtn" onclick="toggleSpeak()">🔊 Read Aloud</button>
+        <div class="voice-chips mt12">
+          <div style="font-size:.75rem;font-weight:900;color:var(--ink-pale);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Quick Read Options</div>
+          <div class="vc" onclick="speak('Welcome to DayCare. Your profile has been set up and your reminders are ready for today. Have a wonderful day!')">
+            <span class="vc-ico">🏠</span><span class="vc-lbl">Today's Welcome</span><span class="vc-arr">▶</span>
+          </div>
+          <div class="vc" onclick="speak('Your emergency contacts are ready. In case of any emergency, press the large red button on the home screen to see your contacts and call for help immediately.')">
+            <span class="vc-ico">🆘</span><span class="vc-lbl">Emergency Instructions</span><span class="vc-arr">▶</span>
+          </div>
+          <div class="vc" onclick="speak('Remember to take your medicines on time, drink plenty of water, and take a short walk today. Small steps every day keep you healthy and strong.')">
+            <span class="vc-ico">💊</span><span class="vc-lbl">Health Tip of the Day</span><span class="vc-arr">▶</span>
+          </div>
+          <div class="vc" onclick="speak('Every day is a gift. Open it with gratitude. You are loved, valued, and capable of wonderful things.')">
+            <span class="vc-ico">💬</span><span class="vc-lbl">Morning Motivation</span><span class="vc-arr">▶</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div class="s-row" onclick="togglePanel('fontPanel','fontCaret')">
+      <div class="s-icon" style="background:var(--green-s);">🔤</div>
+      <div class="s-info">
+        <div class="s-name">Change Font Size</div>
+        <div class="s-desc" id="fontDesc">Currently: Medium (17px)</div>
+      </div>
+      <div class="s-caret" id="fontCaret">›</div>
+    </div>
+    <div class="expand-panel" id="fontPanel">
+      <div class="expand-inner">
+        <div class="font-size-visual">
+          <div class="font-preview" id="fontPreview">Aa</div>
+          <div>
+            <div style="font-size:1rem;font-weight:800;" id="fontName">Medium</div>
+            <div class="font-sub" id="fontPx">17px</div>
+          </div>
+        </div>
+        <div class="font-btns-row">
+          <button class="fb" onclick="setFont('small',14,'Small','Smaller text')" id="fb-small">A<span>Small</span></button>
+          <button class="fb sel" onclick="setFont('medium',17,'Medium','Default')" id="fb-medium" style="font-size:1rem;">A<span>Medium</span></button>
+          <button class="fb" onclick="setFont('large',21,'Large','Larger text')" id="fb-large" style="font-size:1.2rem;">A<span>Large</span></button>
+          <button class="fb" onclick="setFont('xlarge',26,'X-Large','Biggest')" id="fb-xlarge" style="font-size:1.4rem;">A<span>X-Large</span></button>
+        </div>
+        <div style="margin-top:14px;background:var(--sun-soft);border-radius:12px;padding:14px;font-size:.9rem;line-height:1.65;">
+          This is a preview of how text will appear across the app at the selected font size. Larger text is easier to read and recommended for most seniors.
+        </div>
+      </div>
+    </div>
+
+    <!-- High Contrast -->
+    <div class="s-row no-tap">
+      <div class="s-icon" style="background:#1A1A1A;">🌓</div>
+      <div class="s-info">
+        <div class="s-name">High Contrast Mode</div>
+        <div class="s-desc" id="hcDesc">Off — normal warm colours</div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()">
+        <input type="checkbox" id="hcToggle" onchange="toggleHC()" />
+        <span class="tog-slider"></span>
+      </label>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════ NOTIFICATIONS ══════════ -->
+<div class="section-group">
+  <div class="section-label">🔔 Notification Settings</div>
+  <div class="settings-card">
+    <div class="s-row" onclick="togglePanel('notifPanel','notifCaret')">
+      <div class="s-icon" style="background:var(--sun-soft);">🔔</div>
+      <div class="s-info">
+        <div class="s-name">Manage Notifications</div>
+        <div class="s-desc" id="notifSummary">5 of 6 alerts enabled</div>
+      </div>
+      <div class="s-caret" id="notifCaret">›</div>
+    </div>
+    <div class="expand-panel" id="notifPanel">
+      <div class="expand-inner" id="notifList"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ EMERGENCY CONTACTS ══════════ -->
+<div class="section-group">
+  <div class="section-label">🆘 Emergency Contacts</div>
+  <div class="settings-card">
+    <div class="s-row" onclick="togglePanel('ecPanel','ecCaret')">
+      <div class="s-icon" style="background:var(--red-s);">📱</div>
+      <div class="s-info">
+        <div class="s-name">Manage Emergency Contacts</div>
+        <div class="s-desc" id="ecSummary">3 contacts saved</div>
+      </div>
+      <div class="s-caret" id="ecCaret">›</div>
+    </div>
+    <div class="expand-panel" id="ecPanel">
+      <div class="expand-inner">
+        <div id="ecList"></div>
+        <div class="ec-add-form mt8">
+          <div class="ec-add-title">➕ Add New Contact</div>
+          <input class="ec-input" id="ecN" placeholder="Full Name" />
+          <input class="ec-input" id="ecP" type="tel" placeholder="Phone Number" />
+          <select class="ec-select" id="ecR">
+            <option value="">Select Relationship</option>
+            <option>Son</option><option>Daughter</option><option>Spouse</option>
+            <option>Sibling</option><option>Friend</option><option>Doctor</option>
+            <option>Neighbour</option><option>Caregiver</option><option>Ambulance</option>
+          </select>
+          <button class="ec-add-btn" onclick="addContact()">Save Contact</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ APP INFO ══════════ -->
+<div class="section-group" style="padding-bottom:20px;">
+  <div class="section-label">ℹ️ About</div>
+  <div class="app-info-card">
+    <div class="app-info-logo">☀️</div>
+    <div>
+      <div class="app-info-name">DayCare</div>
+      <div class="app-info-ver">Version 2.0 · Made with ❤️ for seniors</div>
+    </div>
+    <div class="app-info-badge">v2.0</div>
+  </div>
+</div>
+
+<div style="height:100px;"></div>
+
+<!-- ══════════ BOTTOM NAV ══════════ -->
+<nav class="nav-bar">
+  <button class="nb" onclick="toast('Going Home…')">
+    <span class="nb-ico">🏠</span>Home
+  </button>
+  <button class="nb" onclick="toast('Opening Tasks…')">
+    <span class="nb-ico">📋</span>Tasks
+  </button>
+  <button class="nb" onclick="toast('Opening Learn…')">
+    <span class="nb-ico">📚</span>Learn
+  </button>
+  <button class="nb active">
+    <span class="nb-ico">👤</span>Profile
+  </button>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* ── TOAST ── */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+/* ── EXPAND PANELS ── */
+function togglePanel(panelId, caretId) {
+  const p = document.getElementById(panelId);
+  const c = document.getElementById(caretId);
+  p.classList.toggle('open');
+  c.classList.toggle('open');
+}
+
+/* ── AVATAR PHOTO ── */
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    document.getElementById('avatarImg').src = ev.target.result;
+    document.getElementById('avatarImg').style.display = 'block';
+    document.getElementById('avatarEmoji').style.display = 'none';
+    toast('✅ Profile photo updated!');
+  };
+  r.readAsDataURL(file);
+}
+
+/* ── PROFILE EDIT DRAWER ── */
+let drawerOpen = false;
+function toggleDrawer() {
+  drawerOpen = !drawerOpen;
+  document.getElementById('profileDrawer').classList.toggle('open', drawerOpen);
+  document.getElementById('editBtnIco').textContent = drawerOpen ? '✕' : '✏️';
+  document.getElementById('editBtnLbl').textContent = drawerOpen ? 'Close' : 'Edit Profile';
+}
+
+function saveProfile() {
+  const first  = document.getElementById('fFirst').value.trim();
+  const last   = document.getElementById('fLast').value.trim();
+  const age    = document.getElementById('fAge').value.trim();
+  const gender = document.getElementById('fGender').value;
+  const city   = document.getElementById('fCity').value.trim();
+  const blood  = document.getElementById('fBlood').value;
+  const health = document.getElementById('fHealth').value.trim();
+  const doctor = document.getElementById('fDoctor').value.trim();
+
+  if (!first) { toast('⚠️ Please enter your first name'); return; }
+
+  const fullName = first + (last ? ' ' + last : '');
+  document.getElementById('heroName').textContent = fullName;
+
+  const subParts = [];
+  if (age)    subParts.push(age + ' years old');
+  if (gender) subParts.push(gender);
+  if (city)   subParts.push(city);
+  document.getElementById('heroSub').textContent = subParts.join(' · ') || 'Profile saved ✓';
+
+  // tags
+  const tags = [];
+  if (blood)  tags.push('🩸 ' + blood);
+  if (doctor) tags.push('👩‍⚕️ ' + doctor);
+  document.getElementById('heroTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  // stat bar
+  document.getElementById('statBlood').textContent = blood || '—';
+  document.getElementById('statAge').textContent   = age   || '—';
+  document.getElementById('statCity').textContent  = city  ? city.split(',')[0] : '—';
+  document.getElementById('statHealth').textContent= health? health.split(',')[0] + (health.includes(',') ? '…' : '') : '—';
+
+  // avatar emoji based on gender
+  if (!document.getElementById('avatarImg').style.display || document.getElementById('avatarImg').style.display === 'none') {
+    document.getElementById('avatarEmoji').textContent = gender === 'Female' ? '👵' : '👴';
+  }
+
+  toggleDrawer();
+  toast('✅ Profile saved successfully!');
+}
+
+/* ── VOICE ASSISTANCE ── */
+let speaking = false;
+function toggleSpeak() {
+  if (speaking) { stopSpeak(); return; }
+  const name = document.getElementById('heroName').textContent;
+  const age  = document.getElementById('fAge').value || 'unknown age';
+  const city = document.getElementById('fCity').value || 'your city';
+  const msg  = `Hello ${name !== 'Your Name' ? name : 'there'}! Welcome to your DayCare profile. You are ${age} years old, from ${city}. Your profile and settings are all set up and ready to go. Have a wonderful day and remember to take care of yourself!`;
+  speak(msg);
+}
+function speak(text) {
+  if (!window.speechSynthesis) { toast('⚠️ Voice not available in this browser'); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.88; u.pitch = 1.05; u.volume = 1;
+  const vs = window.speechSynthesis.getVoices();
+  const eng = vs.find(v => v.lang.startsWith('en'));
+  if (eng) u.voice = eng;
+  speaking = true;
+  document.getElementById('speakBtn').textContent = '⏹ Stop Speaking';
+  document.getElementById('speakBtn').classList.add('live');
+  document.getElementById('voiceWaves').style.display = 'flex';
+  document.getElementById('voiceSt').textContent = 'Speaking… tap Stop to end';
+  u.onend = stopSpeak;
+  window.speechSynthesis.speak(u);
+}
+function stopSpeak() {
+  window.speechSynthesis.cancel();
+  speaking = false;
+  document.getElementById('speakBtn').textContent = '🔊 Read Aloud';
+  document.getElementById('speakBtn').classList.remove('live');
+  document.getElementById('voiceWaves').style.display = 'none';
+  document.getElementById('voiceSt').textContent = 'Done! Tap again to repeat';
+}
+
+/* ── FONT SIZE ── */
+const fontMap = {
+  small:   { px: 14, label: 'Small',   desc: 'Compact text' },
+  medium:  { px: 17, label: 'Medium',  desc: 'Default size' },
+  large:   { px: 21, label: 'Large',   desc: 'Comfortable reading' },
+  xlarge:  { px: 26, label: 'X-Large', desc: 'Maximum clarity' },
+};
+let curFont = 'medium';
+function setFont(key, px, label, desc) {
+  curFont = key;
+  document.documentElement.style.setProperty('--fs', px + 'px');
+  document.getElementById('fontDesc').textContent    = `Currently: ${label} (${px}px)`;
+  document.getElementById('fontName').textContent    = label;
+  document.getElementById('fontPx').textContent      = px + 'px';
+  document.getElementById('fontPreview').style.fontSize = (px * 1.8) + 'px';
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('sel'));
+  document.getElementById('fb-' + key).classList.add('sel');
+  toast(`✅ Font size set to ${label}`);
+}
+
+/* ── HIGH CONTRAST ── */
+function toggleHC() {
+  const on = document.getElementById('hcToggle').checked;
+  document.body.classList.toggle('hc', on);
+  document.getElementById('hcDesc').textContent = on
+    ? 'On — dark high-contrast mode'
+    : 'Off — normal warm colours';
+  toast(on ? '🌓 High contrast enabled' : '☀️ Normal mode restored');
+}
+
+/* ── NOTIFICATIONS ── */
+const notifs = [
+  { ico: '💊', name: 'Medicine Reminders',   sub: '10 min before dose time',         on: true  },
+  { ico: '🚶', name: 'Exercise Reminder',     sub: 'Daily walk prompt at 7:30 AM',    on: true  },
+  { ico: '💧', name: 'Water Reminder',        sub: 'Every 2 hours during the day',    on: false },
+  { ico: '🧘', name: 'Activity Reminder',     sub: 'Engagement nudge at 4 PM',        on: true  },
+  { ico: '💬', name: 'Daily Quote',           sub: 'Motivational quote each morning', on: true  },
+  { ico: '🕉️', name: 'Spiritual Reminder',   sub: 'Morning mantra/puja at 6 AM',     on: true  },
+];
+function renderNotifs() {
+  const on = notifs.filter(n => n.on).length;
+  document.getElementById('notifSummary').textContent = `${on} of ${notifs.length} alerts enabled`;
+  document.getElementById('notifList').innerHTML = notifs.map((n, i) => `
+    <div class="notif-item">
+      <div class="notif-left">
+        <span class="notif-ico">${n.ico}</span>
+        <div class="notif-txt">
+          <div class="nt">${n.name}</div>
+          <div class="ns">${n.sub}</div>
+        </div>
+      </div>
+      <label class="tog" onclick="event.stopPropagation()">
+        <input type="checkbox" ${n.on ? 'checked' : ''} onchange="toggleNotif(${i}, this.checked)" />
+        <span class="tog-slider"></span>
+      </label>
+    </div>`).join('');
+}
+function toggleNotif(i, val) {
+  notifs[i].on = val;
+  renderNotifs();
+  toast(val ? `🔔 ${notifs[i].name} ON` : `🔕 ${notifs[i].name} OFF`);
+}
+renderNotifs();
+
+/* ── EMERGENCY CONTACTS ── */
+const relEmoji = { Son:'👨', Daughter:'👩', Spouse:'💑', Sibling:'🧑', Friend:'😊', Doctor:'👩‍⚕️', Neighbour:'🏠', Caregiver:'🤝', Ambulance:'🚑', '':'👤' };
+const bgPalette = ['#D6EAFA','#D8F5E6','#FDE8D5','#EDE5F8','#FFF3C4','#FCDEDE'];
+let contacts = [
+  { name: 'Emergency Services', phone: '112',              rel: 'Ambulance' },
+  { name: 'Family Member',      phone: '+91 98765 43210',  rel: 'Son'       },
+  { name: 'Dr. Anita Sharma',   phone: '+91 91234 56789',  rel: 'Doctor'    },
+];
+function renderContacts() {
+  document.getElementById('ecSummary').textContent = `${contacts.length} contact${contacts.length !== 1 ? 's' : ''} saved`;
+  document.getElementById('ecList').innerHTML = contacts.map((c, i) => `
+    <div class="ec-card" style="animation-delay:${i * .06}s">
+      <div class="ec-ava" style="background:${bgPalette[i % bgPalette.length]}">${relEmoji[c.rel] || '👤'}</div>
+      <div class="ec-info">
+        <div class="ec-name">${c.name}</div>
+        <div class="ec-phone">📞 ${c.phone}</div>
+        <div class="ec-rel">${c.rel || 'Contact'}</div>
+      </div>
+      <div class="ec-actions">
+        <button class="ec-call" onclick="toast('📞 Calling ${c.name}…')" title="Call">📞</button>
+        <button class="ec-del" onclick="delContact(${i})" title="Remove">✕</button>
+      </div>
+    </div>`).join('');
+}
+function delContact(i) {
+  if (contacts.length <= 1) { toast('⚠️ Keep at least one contact!'); return; }
+  const n = contacts[i].name;
+  contacts.splice(i, 1);
+  renderContacts();
+  toast(`🗑 ${n} removed`);
+}
+function addContact() {
+  const name = document.getElementById('ecN').value.trim();
+  const phone = document.getElementById('ecP').value.trim();
+  const rel   = document.getElementById('ecR').value;
+  if (!name || !phone) { toast('⚠️ Please fill in name and phone'); return; }
+  contacts.push({ name, phone, rel });
+  document.getElementById('ecN').value = '';
+  document.getElementById('ecP').value = '';
+  document.getElementById('ecR').value = '';
+  renderContacts();
+  toast(`✅ ${name} added!`);
+}
+renderContacts();
+
+// Load voices asap
+if (window.speechSynthesis) window.speechSynthesis.getVoices();
+</script>
+</body>
+</html>

@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DayCare — Welcome</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,600;1,700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ─── TOKENS ──────────────────────────────────────────── */
+:root {
+  --sun:      #E07B39;
+  --sun-dk:   #B85C1A;
+  --sun-lt:   #F5A86A;
+  --sun-soft: #FDE8D5;
+  --cream:    #FFFAF5;
+  --white:    #FFFFFF;
+  --ink:      #1E1A14;
+  --ink-mid:  #5A4E3A;
+  --ink-pale: #A89070;
+  --border:   #EDE0D0;
+
+  /* slide accent colours */
+  --s0-a: #E07B39; --s0-b: #B85C1A; /* splash  – sunrise orange */
+  --s1-a: #2E8B7A; --s1-b: #1F6358; /* tasks   – teal          */
+  --s2-a: #6E4FA0; --s2-b: #4A3278; /* learn   – indigo        */
+  --s3-a: #C07B00; --s3-b: #8A5500; /* health  – gold          */
+  --s4-a: #C0415A; --s4-b: #8A2B40; /* emergency– rose         */
+  --s5-a: #3A7FBF; --s5-b: #235E99; /* profile – blue          */
+  --s6-a: #2E8B4A; --s6-b: #1F6335; /* ready   – green         */
+
+  --r: 24px;
+  --shadow: 0 6px 32px rgba(30,26,20,.12);
+}
+
+/* ─── RESET ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 17px;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ─── PROGRESS BAR ────────────────────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: rgba(0,0,0,.08);
+  z-index: 200;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--sun);
+  border-radius: 4px;
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+/* ─── SKIP BUTTON ─────────────────────────────────────── */
+.skip-btn {
+  position: fixed;
+  top: 14px; right: 18px;
+  font-family: 'Nunito', sans-serif;
+  font-size: .82rem; font-weight: 800;
+  color: rgba(255,255,255,.75);
+  background: rgba(0,0,0,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 20px;
+  padding: 6px 14px;
+  cursor: pointer;
+  z-index: 200;
+  transition: all .2s;
+}
+.skip-btn:hover { background: rgba(0,0,0,.3); color: white; }
+.skip-btn.dark { color: var(--ink-pale); background: rgba(0,0,0,.07); border-color: var(--border); }
+
+/* ─── SLIDE WRAPPER ───────────────────────────────────── */
+.slider-track {
+  display: flex;
+  height: 100%;
+  transition: transform .55s cubic-bezier(.4,0,.2,1);
+}
+.slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── SLIDE ILLUSTRATIONS (top half) ─────────────────── */
+.slide-art {
+  flex: 0 0 52%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.slide-art .bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.art-main { position: relative; z-index: 3; text-align: center; }
+.art-emoji { font-size: 5.5rem; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,.2)); }
+.art-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.22);
+  border: 1.5px solid rgba(255,255,255,.4);
+  border-radius: 30px;
+  padding: 7px 18px;
+  font-size: .8rem; font-weight: 900;
+  color: white;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-top: 14px;
+}
+
+/* feature icon grid in art area */
+.feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 28px;
+  width: 100%;
+  position: relative; z-index: 3;
+}
+.feat-tile {
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: transform .2s;
+}
+.feat-tile:active { transform: scale(.97); }
+.feat-ico  { font-size: 1.9rem; display: block; margin-bottom: 6px; }
+.feat-name { font-size: .78rem; font-weight: 900; color: white; line-height: 1.3; }
+
+/* phone mockup for slide 0 */
+.phone-mockup {
+  width: 160px; height: 220px;
+  background: rgba(255,255,255,.15);
+  border: 3px solid rgba(255,255,255,.5);
+  border-radius: 28px;
+  position: relative; z-index: 3;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+.phone-notch {
+  width: 48px; height: 6px;
+  background: rgba(255,255,255,.5);
+  border-radius: 3px;
+  margin: 10px auto 0;
+}
+.phone-screen {
+  flex: 1; padding: 10px 8px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.phone-row {
+  background: rgba(255,255,255,.25);
+  border-radius: 8px;
+  height: 28px;
+  display: flex; align-items: center; padding: 0 8px; gap: 6px;
+}
+.phone-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.7); }
+.phone-line { flex: 1; height: 4px; background: rgba(255,255,255,.4); border-radius: 2px; }
+.phone-sos {
+  background: rgba(220,50,50,.7); border-radius: 8px;
+  height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 900; color: white; gap: 4px;
+}
+
+/* step mockup for tutorials */
+.step-mockup {
+  width: 90%; max-width: 300px;
+  position: relative; z-index: 3;
+}
+.step-item {
+  background: rgba(255,255,255,.2);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 9px;
+  transition: all .3s;
+}
+.step-item.highlight {
+  background: rgba(255,255,255,.35);
+  border-color: rgba(255,255,255,.6);
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  transform: scale(1.03);
+}
+.si-ico { font-size: 1.4rem; flex-shrink: 0; }
+.si-text { color: white; font-size: .82rem; font-weight: 800; }
+.si-check {
+  margin-left: auto; width: 24px; height: 24px;
+  border-radius: 50%; background: rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: white; flex-shrink: 0;
+}
+
+/* ─── SLIDE CONTENT (bottom half) ────────────────────── */
+.slide-content {
+  flex: 1;
+  background: var(--cream);
+  border-radius: 28px 28px 0 0;
+  padding: 28px 28px 0;
+  position: relative;
+  z-index: 5;
+  margin-top: -28px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.slide-tag {
+  font-size: .72rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 1.6px;
+  margin-bottom: 8px;
+}
+.slide-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem; font-weight: 900;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.slide-title em { font-style: italic; }
+.slide-body {
+  font-size: .96rem;
+  line-height: 1.7;
+  color: var(--ink-mid);
+  margin-bottom: 18px;
+}
+
+/* feature list */
+.feat-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+.fl-item {
+  display: flex; align-items: flex-start; gap: 13px;
+  background: var(--white);
+  border-radius: 14px; padding: 13px 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  border: 1.5px solid var(--border);
+  animation: fadeIn .4s ease both;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.fl-ico { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+.fl-info .fl-name { font-size: .92rem; font-weight: 800; }
+.fl-info .fl-desc { font-size: .78rem; color: var(--ink-pale); margin-top: 2px; line-height: 1.4; }
+
+/* ─── SETUP FORM (last slide) ─────────────────────────── */
+.setup-form { display: flex; flex-direction: column; gap: 0; }
+.sf-label {
+  font-size: .75rem; font-weight: 900;
+  color: var(--ink-pale); text-transform: uppercase; letter-spacing: .8px;
+  margin-bottom: 5px;
+}
+.sf-input, .sf-select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2.5px solid var(--border);
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--ink); background: var(--white);
+  outline: none; margin-bottom: 14px;
+  transition: border .2s, box-shadow .2s;
+}
+.sf-input:focus, .sf-select:focus {
+  border-color: var(--sun);
+  box-shadow: 0 0 0 4px rgba(224,123,57,.12);
+}
+.sf-row { display: flex; gap: 10px; }
+.sf-row > div { flex: 1; }
+
+/* avatar picker */
+.avatar-row {
+  display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.av-opt {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--sun-soft);
+  border: 3px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; cursor: pointer;
+  transition: all .2s;
+}
+.av-opt.sel { border-color: var(--sun); box-shadow: 0 0 0 4px rgba(224,123,57,.2); transform: scale(1.1); }
+
+/* language selector */
+.lang-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.lang-btn {
+  padding: 9px 16px; border-radius: 30px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  font-family: 'Nunito', sans-serif;
+  font-size: .85rem; font-weight: 800;
+  color: var(--ink-mid); cursor: pointer;
+  transition: all .2s;
+}
+.lang-btn.sel { background: var(--sun-soft); border-color: var(--sun); color: var(--sun); }
+
+/* ─── BOTTOM CONTROLS ─────────────────────────────────── */
+.slide-footer {
+  padding: 16px 28px 24px;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.dots-row {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 4px;
+  background: var(--border);
+  transition: all .35s cubic-bezier(.4,0,.2,1);
+}
+.dot.active { width: 28px; background: var(--sun); }
+
+.btn-row { display: flex; gap: 10px; }
+.btn-back {
+  padding: 15px 22px;
+  border: 2.5px solid var(--border);
+  border-radius: 16px;
+  background: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  color: var(--ink-mid); cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-back:hover { background: var(--border); }
+.btn-next {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 16px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 900;
+  color: white; cursor: pointer;
+  background: linear-gradient(135deg, var(--sun), var(--sun-dk));
+  box-shadow: 0 4px 18px rgba(224,123,57,.4);
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-next:hover { transform: translateY(-1px); box-shadow: 0 7px 24px rgba(224,123,57,.5); }
+.btn-next:active { transform: translateY(0); }
+.btn-next.green-btn {
+  background: linear-gradient(135deg, #2E8B4A, #1F6335);
+  box-shadow: 0 4px 18px rgba(46,139,74,.4);
+}
+
+/* ─── SPLASH SCREEN ───────────────────────────────────── */
+.splash {
+  position: fixed; inset: 0;
+  background: linear-gradient(150deg, var(--sun) 0%, var(--sun-dk) 60%, #7A3A08 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 999;
+  transition: opacity .8s ease, transform .8s ease;
+}
+.splash.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+.splash-logo { font-size: 5rem; margin-bottom: 16px; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+.splash-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 900; color: white;
+  margin-bottom: 8px; text-align: center;
+}
+.splash-tagline {
+  font-size: .95rem; color: rgba(255,255,255,.8);
+  font-family: 'Playfair Display', serif;
+  font-style: italic; text-align: center;
+}
+.splash-loader {
+  width: 48px; height: 4px;
+  background: rgba(255,255,255,.25);
+  border-radius: 4px; margin-top: 48px;
+  overflow: hidden;
+}
+.splash-loader-fill {
+  height: 100%; width: 0%;
+  background: white; border-radius: 4px;
+  animation: load 2s ease forwards;
+}
+@keyframes load { to { width: 100%; } }
+
+/* ─── COMPLETION CELEBRATION ──────────────────────────── */
+.confetti {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 300;
+  overflow: hidden;
+}
+.conf-piece {
+  position: absolute;
+  top: -20px;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  animation: fall linear both;
+}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ─── ACCESSIBILITY: LARGE TEXT MODE ──────────────────── */
+.big-text .slide-title  { font-size: 2rem; }
+.big-text .slide-body   { font-size: 1.08rem; }
+.big-text .fl-name      { font-size: 1.02rem; }
+.big-text .btn-next,
+.big-text .btn-back     { font-size: 1.08rem; padding: 17px; }
+
+/* ─── SWIPE HINT ──────────────────────────────────────── */
+.swipe-hint {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; font-size: .75rem; font-weight: 700; color: var(--ink-pale);
+  padding-bottom: 2px;
+}
+.swipe-arrow { animation: swipe-bounce 1.5s ease-in-out infinite; display: inline-block; }
+@keyframes swipe-bounce { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+
+/* ─── ANIMATIONS ──────────────────────────────────────── */
+.slide-art * { animation: artIn .6s ease both; }
+.artIn { animation: artIn .6s ease both; }
+@keyframes artIn { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+/* floating blobs in art bg */
+.blob {
+  position: absolute; border-radius: 50%;
+  pointer-events: none;
+}
+
+/* toast */
+.toast {
+  position: fixed; bottom: 100px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: white;
+  padding: 12px 24px; border-radius: 40px;
+  font-size: .88rem; font-weight: 700;
+  opacity: 0; z-index: 500;
+  transition: opacity .3s, transform .3s;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH ══ -->
+<div class="splash" id="splash">
+  <div class="splash-logo">☀️</div>
+  <div class="splash-name">Saarthi</div>
+  <div class="splash-tagline">Your Trusted Daily Companion</div>
+  <div class="splash-loader"><div class="splash-loader-fill"></div></div>
+</div>
+
+<!-- ══ PROGRESS BAR ══ -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<!-- ══ SKIP ══ -->
+<button class="skip-btn" id="skipBtn" onclick="goToSlide(TOTAL-1)">Skip →</button>
+
+<!-- ══ CONFETTI ══ -->
+<div class="confetti" id="confetti"></div>
+
+<!-- ══ SLIDER ══ -->
+<div class="slider-track" id="sliderTrack">
+
+  <!-- ─ SLIDE 0: WELCOME ──────────────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s0-a),var(--s0-b));">
+      <div class="blob" style="width:200px;height:200px;background:rgba(255,255,255,.07);top:-60px;right:-60px;"></div>
+      <div class="blob" style="width:130px;height:130px;background:rgba(255,255,255,.05);bottom:-40px;left:-30px;"></div>
+      <div class="art-main">
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-row"><div class="phone-dot" style="background:#FFD700"></div><div class="phone-line"></div></div>
+            <div class="phone-sos">🆘 EMERGENCY HELP</div>
+            <div class="phone-row"><div class="phone-dot" style="background:#7FE8A0"></div><div class="phone-line"></div></div>
+            <div class="phone-row"><div class="phone-dot" style="background:#7FC8FF"></div><div class="phone-line"></div></div>
+            <div class="phone-row"><div class="phone-dot"></div><div class="phone-line" style="width:60%"></div></div>
+            <div style="display:flex;gap:5px;margin-top:2px;">
+              <div style="flex:1;background:rgba(255,255,255,.2);border-radius:6px;height:22px;"></div>
+              <div style="flex:1;background:rgba(255,255,255,.2);border-radius:6px;height:22px;"></div>
+              <div style="flex:1;background:rgba(255,255,255,.2);border-radius:6px;height:22px;"></div>
+              <div style="flex:1;background:rgba(255,255,255,.2);border-radius:6px;height:22px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s0-a)">Welcome 🙏</div>
+      <div class="slide-title">Hello!<br/><em>Welcome to Saarthi </em></div>
+      <div class="slide-body">
+        Saarthi is your simple, caring daily saathi — designed specially for you. Big buttons, clear text, and everything you need in one place.It gives you the ease of living
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">📋</span>
+          <div class="fl-info"><div class="fl-name">Daily Reminders</div><div class="fl-desc">Never miss medicine, meals or appointments</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">📚</span>
+          <div class="fl-info"><div class="fl-name">Learn & Grow</div><div class="fl-desc">Health tips, digital skills, and wisdom daily</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">🆘</span>
+          <div class="fl-info"><div class="fl-name">Emergency Help</div><div class="fl-desc">One tap to call your family or doctor instantly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 1: TASKS & REMINDERS ─────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s1-a),var(--s1-b));">
+      <div class="blob" style="width:220px;height:220px;background:rgba(255,255,255,.06);top:-80px;left:-60px;"></div>
+      <div class="step-mockup">
+        <div class="step-item highlight">
+          <div class="si-ico">💊</div>
+          <div class="si-text">Morning Medicine — 8:00 AM</div>
+          <div class="si-check">✓</div>
+        </div>
+        <div class="step-item">
+          <div class="si-ico">🍎</div>
+          <div class="si-text">Breakfast — 9:00 AM</div>
+          <div class="si-check" style="background:rgba(255,255,255,.2)"></div>
+        </div>
+        <div class="step-item">
+          <div class="si-ico">🚶</div>
+          <div class="si-text">Morning Walk — 7:30 AM</div>
+          <div class="si-check" style="background:rgba(255,255,255,.2)"></div>
+        </div>
+        <div class="step-item" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)">
+          <div class="si-ico">＋</div>
+          <div class="si-text" style="color:rgba(255,255,255,.6)">Add a new reminder…</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s1-a)">📋 Daily Tasks</div>
+      <div class="slide-title">Never Miss<br/><em>a Single Thing</em></div>
+      <div class="slide-body">
+        Set reminders for medicines, meals, walks, doctor calls — anything important. Tap a task to mark it done. The app keeps track for you.
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">⏰</span>
+          <div class="fl-info"><div class="fl-name">Timed Reminders</div><div class="fl-desc">Set any time — morning, afternoon or night</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">🔁</span>
+          <div class="fl-info"><div class="fl-name">Repeat Daily</div><div class="fl-desc">Set once, repeat every day automatically</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">💧</span>
+          <div class="fl-info"><div class="fl-name">Water & Habit Tracker</div><div class="fl-desc">Track water intake and 7-day habit streaks</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 2: LEARN & GROW ──────────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s2-a),var(--s2-b));">
+      <div class="blob" style="width:180px;height:180px;background:rgba(255,255,255,.06);bottom:-50px;right:-50px;"></div>
+      <div class="feat-grid">
+        <div class="feat-tile">
+          <span class="feat-ico">❤️</span>
+          <div class="feat-name">Health & Wellness</div>
+        </div>
+        <div class="feat-tile" style="background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.5);">
+          <span class="feat-ico">📱</span>
+          <div class="feat-name">Digital Skills</div>
+        </div>
+        <div class="feat-tile">
+          <span class="feat-ico">🎨</span>
+          <div class="feat-name">Hobbies & Creativity</div>
+        </div>
+        <div class="feat-tile">
+          <span class="feat-ico">🕉️</span>
+          <div class="feat-name">Spiritual Wisdom</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s2-a)">📚 Learn & Grow</div>
+      <div class="slide-title">Something New<br/><em>Every Single Day</em></div>
+      <div class="slide-body">
+        Learn health tips, digital skills like WhatsApp and video calling, spiritual mantras, finance basics, and discover new hobbies — all in simple, easy steps.
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">🧠</span>
+          <div class="fl-info"><div class="fl-name">Brain Quiz</div><div class="fl-desc">Fun questions to keep your mind sharp and active</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">🌬️</span>
+          <div class="fl-info"><div class="fl-name">Breathing Exercises</div><div class="fl-desc">Guided breathing to reduce stress and calm the mind</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">🌟</span>
+          <div class="fl-info"><div class="fl-name">Earn XP Points</div><div class="fl-desc">Complete lessons and earn stars for your progress</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 3: HEALTH TRACKING ───────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s3-a),var(--s3-b));">
+      <div class="blob" style="width:200px;height:200px;background:rgba(255,255,255,.06);top:-70px;right:-60px;"></div>
+      <div class="art-main">
+        <div style="display:flex;gap:14px;justify-content:center;position:relative;z-index:3;">
+          <div style="background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:18px;padding:20px 16px;text-align:center;width:110px;">
+            <div style="font-size:2rem;margin-bottom:8px;">💧</div>
+            <div style="font-size:1.4rem;font-weight:900;color:white;">6</div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.75);font-weight:700;margin-top:2px;">Glasses Today</div>
+            <div style="display:flex;gap:3px;justify-content:center;margin-top:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:white;opacity:.9;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:white;opacity:.9;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:white;opacity:.9;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:14px;padding:12px 14px;text-align:center;">
+              <div style="font-size:1.5rem;">🩺</div>
+              <div style="font-size:.8rem;font-weight:900;color:white;margin-top:4px;">120/80</div>
+              <div style="font-size:.62rem;color:rgba(255,255,255,.7);font-weight:700;">Blood Pressure</div>
+            </div>
+            <div style="background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:14px;padding:12px 14px;text-align:center;">
+              <div style="font-size:1.5rem;">😴</div>
+              <div style="font-size:.8rem;font-weight:900;color:white;margin-top:4px;">7 hrs</div>
+              <div style="font-size:.62rem;color:rgba(255,255,255,.7);font-weight:700;">Sleep Last Night</div>
+            </div>
+          </div>
+        </div>
+        <div class="art-badge" style="margin-top:18px;">Health Tracker</div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s3-a)">❤️ Health</div>
+      <div class="slide-title">Your Health,<br/><em>In Your Hands</em></div>
+      <div class="slide-body">
+        Track your water intake, blood pressure, sleep, and steps — all in one simple place. Small daily tracking leads to big health improvements.
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">🔥</span>
+          <div class="fl-info"><div class="fl-name">Habit Streaks</div><div class="fl-desc">See your 7-day streak for walking, medicine & more</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">💊</span>
+          <div class="fl-info"><div class="fl-name">Medicine Tracker</div><div class="fl-desc">Visual grid showing taken and pending medicines</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">📖</span>
+          <div class="fl-info"><div class="fl-name">Health Lessons</div><div class="fl-desc">Learn about nutrition, heart health and safe medicines</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 4: EMERGENCY ──────────────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s4-a),var(--s4-b));">
+      <div class="blob" style="width:240px;height:240px;background:rgba(255,255,255,.05);bottom:-80px;left:-70px;"></div>
+      <div class="art-main">
+        <div style="position:relative;z-index:3;">
+          <div style="background:rgba(220,50,50,.8);border:3px solid rgba(255,255,255,.6);border-radius:50px;padding:22px 40px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 8px rgba(220,50,50,.3),0 8px 30px rgba(0,0,0,.3);animation:sos-pulse 2s ease-in-out infinite;">
+            <span style="font-size:2.2rem;">🆘</span>
+            <div>
+              <div style="font-size:1.2rem;font-weight:900;color:white;">EMERGENCY</div>
+              <div style="font-size:.75rem;color:rgba(255,255,255,.8);font-weight:700;">Tap to call for help</div>
+            </div>
+          </div>
+          <style>@keyframes sos-pulse{0%,100%{box-shadow:0 0 0 8px rgba(220,50,50,.3),0 8px 30px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 18px rgba(220,50,50,.15),0 8px 30px rgba(0,0,0,.3)}}</style>
+          <div style="display:flex;gap:12px;margin-top:18px;justify-content:center;">
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;padding:12px 14px;text-align:center;min-width:80px;">
+              <div style="font-size:1.4rem;">🚑</div>
+              <div style="font-size:.72rem;color:white;font-weight:800;margin-top:4px;">Ambulance</div>
+            </div>
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;padding:12px 14px;text-align:center;min-width:80px;">
+              <div style="font-size:1.4rem;">👨</div>
+              <div style="font-size:.72rem;color:white;font-weight:800;margin-top:4px;">Family</div>
+            </div>
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;padding:12px 14px;text-align:center;min-width:80px;">
+              <div style="font-size:1.4rem;">👩‍⚕️</div>
+              <div style="font-size:.72rem;color:white;font-weight:800;margin-top:4px;">Doctor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s4-a)">🆘 Emergency</div>
+      <div class="slide-title">Help is Always<br/><em>One Tap Away</em></div>
+      <div class="slide-body">
+        The large red Emergency button is always at the top of your screen. Tap it anytime to instantly see your emergency contacts and call for help.
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">📞</span>
+          <div class="fl-info"><div class="fl-name">One-Tap Calling</div><div class="fl-desc">Tap any contact to call them directly from the app</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">➕</span>
+          <div class="fl-info"><div class="fl-name">Add Your Contacts</div><div class="fl-desc">Save your family, doctor and neighbours</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">🔔</span>
+          <div class="fl-info"><div class="fl-name">Always Visible</div><div class="fl-desc">The emergency button is always at the top — never hidden</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 5: PROFILE & SETTINGS ───────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s5-a),var(--s5-b));">
+      <div class="blob" style="width:200px;height:200px;background:rgba(255,255,255,.06);top:-70px;right:-60px;"></div>
+      <div class="art-main">
+        <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.25);border:4px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.2);">👴</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:12px;padding:10px 14px;text-align:center;">
+              <div style="font-size:1.3rem;">🔊</div><div style="font-size:.68rem;color:white;font-weight:800;margin-top:4px;">Voice</div>
+            </div>
+            <div style="background:rgba(255,255,255,.28);border:2px solid rgba(255,255,255,.55);border-radius:12px;padding:10px 14px;text-align:center;">
+              <div style="font-size:1.3rem;">🔤</div><div style="font-size:.68rem;color:white;font-weight:800;margin-top:4px;">Font Size</div>
+            </div>
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:12px;padding:10px 14px;text-align:center;">
+              <div style="font-size:1.3rem;">🌓</div><div style="font-size:.68rem;color:white;font-weight:800;margin-top:4px;">Contrast</div>
+            </div>
+            <div style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:12px;padding:10px 14px;text-align:center;">
+              <div style="font-size:1.3rem;">🔔</div><div style="font-size:.68rem;color:white;font-weight:800;margin-top:4px;">Alerts</div>
+            </div>
+          </div>
+        </div>
+        <div class="art-badge" style="margin-top:16px;">Profile & Settings</div>
+      </div>
+    </div>
+    <div class="slide-content">
+      <div class="slide-tag" style="color:var(--s5-a)">👤 Profile</div>
+      <div class="slide-title">Made Just<br/><em>For You</em></div>
+      <div class="slide-body">
+        Customise everything to suit your needs. Make text bigger, turn on high contrast for clearer reading, or have the app read content aloud for you.
+      </div>
+      <div class="feat-list">
+        <div class="fl-item" style="animation-delay:.05s">
+          <span class="fl-ico">🔊</span>
+          <div class="fl-info"><div class="fl-name">Voice Read-Aloud</div><div class="fl-desc">The app will speak content aloud for you</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.12s">
+          <span class="fl-ico">🔤</span>
+          <div class="fl-info"><div class="fl-name">Large Font Options</div><div class="fl-desc">Choose Small, Medium, Large or X-Large text</div></div>
+        </div>
+        <div class="fl-item" style="animation-delay:.19s">
+          <span class="fl-ico">🌓</span>
+          <div class="fl-info"><div class="fl-name">High Contrast Mode</div><div class="fl-desc">Dark background for much easier reading</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ SLIDE 6: SETUP ─────────────────────────────────── -->
+  <div class="slide">
+    <div class="slide-art" style="background:linear-gradient(150deg,var(--s6-a),var(--s6-b));min-height:auto;flex:0 0 auto;padding:24px 0 32px;">
+      <div class="blob" style="width:180px;height:180px;background:rgba(255,255,255,.06);top:-50px;right:-50px;"></div>
+      <div class="art-main" style="padding-top:14px;">
+        <span class="art-emoji">🌱</span>
+        <div class="art-badge">Quick Setup — 1 Minute</div>
+      </div>
+    </div>
+    <div class="slide-content" style="overflow-y:auto;">
+      <div class="slide-tag" style="color:var(--s6-a)">🌟 Let's Begin</div>
+      <div class="slide-title" style="font-size:1.5rem;">Tell Us a Little<br/><em>About Yourself</em></div>
+
+      <!-- Avatar picker -->
+      <div style="margin-bottom:8px;">
+        <div class="sf-label">Choose Your Avatar</div>
+        <div class="avatar-row">
+          <div class="av-opt sel" id="av0" onclick="pickAv(0)">👴</div>
+          <div class="av-opt" id="av1" onclick="pickAv(1)">👵</div>
+          <div class="av-opt" id="av2" onclick="pickAv(2)">🧓</div>
+          <div class="av-opt" id="av3" onclick="pickAv(3)">👨‍🦳</div>
+          <div class="av-opt" id="av4" onclick="pickAv(4)">👩‍🦳</div>
+        </div>
+      </div>
+
+      <div class="setup-form">
+        <div class="sf-row">
+          <div>
+            <div class="sf-label">Your Name</div>
+            <input class="sf-input" id="sfName" placeholder="e.g. Ramesh" />
+          </div>
+          <div>
+            <div class="sf-label">Age</div>
+            <input class="sf-input" id="sfAge" type="number" placeholder="e.g. 67" />
+          </div>
+        </div>
+
+        <div class="sf-label">City</div>
+        <input class="sf-input" id="sfCity" placeholder="e.g. Mumbai, Delhi, Chennai" />
+
+        <div class="sf-label">Preferred Language</div>
+        <div class="lang-row">
+          <button class="lang-btn sel" onclick="pickLang(this)">English</button>
+          <button class="lang-btn" onclick="pickLang(this)">हिंदी</button>
+          <button class="lang-btn" onclick="pickLang(this)">मराठी</button>
+          <button class="lang-btn" onclick="pickLang(this)">தமிழ்</button>
+          <button class="lang-btn" onclick="pickLang(this)">తెలుగు</button>
+          <button class="lang-btn" onclick="pickLang(this)">বাংলা</button>
+        </div>
+
+        <div class="sf-label">Font Size Preference</div>
+        <select class="sf-select" id="sfFont">
+          <option value="medium">Medium (Default)</option>
+          <option value="large">Large — I prefer bigger text</option>
+          <option value="xlarge">X-Large — Biggest text please</option>
+          <option value="small">Small — Normal size is fine</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end slider-track -->
+
+<!-- ══ FOOTER ══ -->
+<div class="slide-footer">
+  <div class="swipe-hint" id="swipeHint">
+    <span>Swipe to explore</span>
+    <span class="swipe-arrow">→</span>
+  </div>
+  <div class="dots-row" id="dotsRow"></div>
+  <div class="btn-row">
+    <button class="btn-back" id="btnBack" onclick="prevSlide()" style="display:none">← Back</button>
+    <button class="btn-next" id="btnNext" onclick="nextSlide()">
+      <span id="btnNextLabel">Let's Begin →</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── CONFIG ────────────────────────────────────────── */
+const TOTAL = 7;
+let current = 0;
+let selectedAvatar = '👴';
+let selectedLang = 'English';
+
+/* ─── SPLASH ────────────────────────────────────────── */
+setTimeout(() => {
+  document.getElementById('splash').classList.add('hidden');
+  setTimeout(() => document.getElementById('splash').style.display = 'none', 900);
+  goToSlide(0, false);
+}, 2200);
+
+/* ─── DOTS ──────────────────────────────────────────── */
+function buildDots() {
+  const row = document.getElementById('dotsRow');
+  row.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goToSlide(i);
+    row.appendChild(d);
+  }
+}
+buildDots();
+
+/* ─── NAVIGATION ────────────────────────────────────── */
+function goToSlide(idx, animate = true) {
+  if (idx < 0 || idx >= TOTAL) return;
+  current = idx;
+  const track = document.getElementById('sliderTrack');
+  if (!animate) track.style.transition = 'none';
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  if (!animate) setTimeout(() => track.style.transition = '', 50);
+
+  // dots
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+
+  // progress
+  document.getElementById('progressFill').style.width = ((idx / (TOTAL - 1)) * 100) + '%';
+
+  // buttons
+  const btnBack = document.getElementById('btnBack');
+  const btnNext = document.getElementById('btnNext');
+  const label   = document.getElementById('btnNextLabel');
+  const skip    = document.getElementById('skipBtn');
+  const hint    = document.getElementById('swipeHint');
+
+  btnBack.style.display = idx > 0 ? 'block' : 'none';
+  hint.style.display    = idx === TOTAL - 1 ? 'none' : 'flex';
+
+  if (idx === TOTAL - 1) {
+    label.textContent = '🌟 Start Using DayCare!';
+    btnNext.classList.add('green-btn');
+    skip.style.display = 'none';
+  } else {
+    label.textContent = idx === 0 ? "Let's Begin →" : idx === TOTAL - 2 ? 'Almost Done →' : 'Next →';
+    btnNext.classList.remove('green-btn');
+    skip.style.display = 'block';
+  }
+
+  // skip btn colour adaptation
+  const darkSlides = [0,1,2,3,4,5,6];
+  skip.className = 'skip-btn';
+}
+
+function nextSlide() {
+  if (current === TOTAL - 1) {
+    completeOnboarding();
+  } else {
+    goToSlide(current + 1);
+  }
+}
+function prevSlide() { goToSlide(current - 1); }
+
+/* ─── TOUCH / SWIPE ─────────────────────────────────── */
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    if (dx < 0) nextSlide();
+    else prevSlide();
+  }
+}, { passive: true });
+
+/* ─── AVATAR ────────────────────────────────────────── */
+const avatars = ['👴','👵','🧓','👨‍🦳','👩‍🦳'];
+function pickAv(i) {
+  document.querySelectorAll('.av-opt').forEach((el,j) => el.classList.toggle('sel', i === j));
+  selectedAvatar = avatars[i];
+}
+
+/* ─── LANGUAGE ──────────────────────────────────────── */
+function pickLang(btn) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  selectedLang = btn.textContent;
+}
+
+/* ─── COMPLETE ──────────────────────────────────────── */
+function completeOnboarding() {
+  const name  = document.getElementById('sfName').value.trim();
+  const age   = document.getElementById('sfAge').value.trim();
+  const city  = document.getElementById('sfCity').value.trim();
+  const font  = document.getElementById('sfFont').value;
+
+  if (!name) {
+    toast('👋 Please enter your name to continue!');
+    document.getElementById('sfName').focus();
+    return;
+  }
+
+  // apply font preference
+  const fontSizes = { small:'15px', medium:'17px', large:'21px', xlarge:'26px' };
+  document.documentElement.style.setProperty('--fs', fontSizes[font] || '17px');
+
+  // show celebration
+  launchConfetti();
+  showCompletionScreen(name, age, city);
+}
+
+/* ─── COMPLETION SCREEN ─────────────────────────────── */
+function showCompletionScreen(name, age, city) {
+  const body = document.body;
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position:fixed;inset:0;z-index:400;
+    background:linear-gradient(150deg,#2E8B4A,#1F6335);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:32px 28px;text-align:center;
+    animation:popIn .4s ease;
+  `;
+  overlay.innerHTML = `
+    <style>@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}</style>
+    <div style="font-size:4.5rem;margin-bottom:18px;animation:bounce 1s ease .3s both;">🎉</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:white;line-height:1.2;margin-bottom:10px;">
+      Welcome,<br/><em>${name}!</em>
+    </div>
+    <div style="font-size:1rem;color:rgba(255,255,255,.82);line-height:1.65;margin-bottom:32px;max-width:300px;">
+      You're all set! Your DayCare app is ready.${age?' You are '+age+' years young':''}${city?' from beautiful '+city:''}. We're so glad you're here. 🌟
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;">
+      <button onclick="launchApp()" style="
+        background:white;color:#1F6335;border:none;border-radius:16px;
+        padding:17px;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;
+        cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.2);transition:all .2s;
+      ">☀️ Open DayCare Now!</button>
+      <button onclick="replayTour()" style="
+        background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.4);
+        border-radius:16px;padding:14px;font-family:'Nunito',sans-serif;
+        font-size:.95rem;font-weight:800;cursor:pointer;
+      ">↺ Replay the Tour</button>
+    </div>
+    <div style="font-size:.78rem;color:rgba(255,255,255,.6);margin-top:24px;font-weight:700;">
+      Avatar: ${selectedAvatar} &nbsp;·&nbsp; Language: ${selectedLang}
+    </div>
+    <style>@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}</style>
+  `;
+  body.appendChild(overlay);
+}
+
+function launchApp()    { toast('🚀 Opening DayCare Home…'); }
+function replayTour()   { document.querySelectorAll('[style*="position:fixed"][style*="1F6335"]').forEach(el=>el.remove()); goToSlide(0); }
+
+/* ─── CONFETTI ──────────────────────────────────────── */
+const confColors = ['#E07B39','#FFD700','#2E8B4A','#3A7FBF','#C0415A','#6E4FA0','#FF6B6B','#4ECDC4'];
+function launchConfetti() {
+  const ctr = document.getElementById('confetti');
+  ctr.innerHTML = '';
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'conf-piece';
+    const size = Math.random() * 10 + 6;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      background:${confColors[Math.floor(Math.random()*confColors.length)]};
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation:fall ${1.5+Math.random()*2}s ${Math.random()*.8}s linear both;
+    `;
+    ctr.appendChild(p);
+  }
+  setTimeout(() => ctr.innerHTML = '', 4000);
+}
+
+/* ─── TOAST ─────────────────────────────────────────── */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ─── KEYBOARD ──────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft')  prevSlide();
+});
+
+/* ─── HIGHLIGHT ANIMATION for task mockup ───────────── */
+function animateTaskMockup() {
+  const items = document.querySelectorAll('.step-item');
+  if (!items.length) return;
+  let cur = 0;
+  setInterval(() => {
+    items.forEach(i => i.classList.remove('highlight'));
+    cur = (cur + 1) % items.length;
+    items[cur].classList.add('highlight');
+  }, 1800);
+}
+setTimeout(animateTaskMockup, 2500);
+</script>
+</body>
+</html>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>DayCare — Quick Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,600;1,800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ═══ RESET & ROOT ═══════════════════════════════════════════════ */
+:root {
+  --sun:    #E8813A;
+  --sun-dk: #C05E1A;
+  --sun-lt: #F7AC72;
+  --cream:  #FFF7EE;
+  --white:  #FFFFFF;
+  --ink:    #1C1712;
+  --ink2:   #5C4A34;
+  --ink3:   #A08060;
+  --border: #EDD8C0;
+
+  --teal:   #25887A;
+  --teal-dk:#165F55;
+  --teal-lt:#4DB8A8;
+  --teal-s: #E0F5F1;
+
+  --red:    #D43030;
+  --red-dk: #A01818;
+  --red-s:  #FDE8E8;
+
+  --green:  #27A057;
+  --green-s:#E0F8EC;
+
+  --r:28px;
+  --shadow: 0 8px 36px rgba(28,23,18,.14);
+  --shadow2:0 16px 56px rgba(28,23,18,.22);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  touch-action:pan-x;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ═══ SLIDE SYSTEM ════════════════════════════════════════════════ */
+.stage{
+  position:fixed;inset:0;
+  display:flex;
+  will-change:transform;
+  transition:transform .6s cubic-bezier(.4,0,.2,1);
+}
+.screen{
+  flex-shrink:0;
+  width:100vw;height:100vh;
+  display:flex;flex-direction:column;
+  overflow:hidden;position:relative;
+}
+
+/* ═══ SCREEN 1 — WELCOME ══════════════════════════════════════════ */
+.s1{background:var(--cream);}
+
+.s1-sky{
+  position:absolute;top:0;left:0;right:0;
+  height:54%;
+  background:linear-gradient(165deg,#E87A30 0%,#C05018 55%,#8B3010 100%);
+  border-radius:0 0 60% 60%/0 0 82px 82px;
+  overflow:hidden;
+}
+.s1-sky::before{
+  content:'';position:absolute;
+  width:260px;height:260px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+  top:-90px;right:-70px;
+}
+.s1-sky::after{
+  content:'';position:absolute;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+  bottom:-30px;left:-20px;
+}
+
+/* sun rays */
+.sun-rays{
+  position:absolute;top:22%;left:50%;
+  transform:translateX(-50%);
+  width:90px;height:90px;
+  animation:spin-slow 20s linear infinite;
+}
+.sun-rays::before,.sun-rays::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,220,120,.35);
+  border-radius:50%;
+  animation:ray-pulse 3s ease-in-out infinite;
+}
+.sun-rays::after{animation-delay:1.5s;background:rgba(255,220,120,.2);}
+@keyframes ray-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.6);opacity:0}}
+@keyframes spin-slow{to{transform:translateX(-50%) rotate(360deg)}}
+
+.sun-circle{
+  position:absolute;top:18%;left:50%;
+  transform:translateX(-50%);
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle,#FFE580 0%,#FFB830 50%,#FF8820 100%);
+  box-shadow:0 0 0 12px rgba(255,200,80,.3),0 0 0 28px rgba(255,180,60,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.4rem;
+  z-index:2;
+}
+
+.s1-logo-band{
+  position:absolute;top:35%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  text-align:center;
+}
+.s1-logo-name{
+  font-family:'Playfair Display',serif;
+  font-size:2.6rem;font-weight:900;
+  color:white;
+  text-shadow:0 3px 20px rgba(0,0,0,.3);
+  letter-spacing:-.5px;
+}
+.s1-logo-tag{
+  font-size:.88rem;font-weight:700;
+  color:rgba(255,255,255,.82);
+  font-family:'Playfair Display',serif;
+  font-style:italic;margin-top:2px;
+}
+
+.s1-body{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:52%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:0 28px 20px;
+  text-align:center;
+}
+.s1-headline{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.5rem,5vw,2rem);
+  font-weight:900;line-height:1.2;
+  color:var(--ink);margin-bottom:12px;
+}
+.s1-headline em{font-style:italic;color:var(--sun);}
+.s1-desc{
+  font-size:clamp(.9rem,3.5vw,1.05rem);
+  line-height:1.65;color:var(--ink2);
+  max-width:320px;margin-bottom:26px;
+}
+.s1-chips{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:28px;
+}
+.chip{
+  background:var(--white);border:2px solid var(--border);
+  border-radius:30px;padding:7px 14px;
+  font-size:.82rem;font-weight:800;color:var(--ink2);
+  display:flex;align-items:center;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+/* ═══ SCREEN 2 — SET A REMINDER ══════════════════════════════════ */
+.s2{background:#F0FBF9;}
+.s2-top{
+  background:linear-gradient(155deg,var(--teal) 0%,var(--teal-dk) 60%,#0E453C 100%);
+  flex:0 0 42%;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.s2-top::before{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-70px;right:-50px;}
+.s2-top::after{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-30px;left:-20px;}
+
+/* animated phone mockup */
+.phone{
+  width:155px;height:210px;
+  background:rgba(255,255,255,.14);
+  border:2.5px solid rgba(255,255,255,.45);
+  border-radius:26px;
+  overflow:hidden;position:relative;z-index:3;
+  box-shadow:0 20px 60px rgba(0,0,0,.35),0 0 0 6px rgba(255,255,255,.08);
+}
+.phone-bar{
+  background:rgba(255,255,255,.2);
+  height:10px;width:44px;border-radius:5px;
+  margin:10px auto 8px;
+}
+.phone-inner{padding:0 10px;display:flex;flex-direction:column;gap:6px;}
+
+.ph-row{
+  background:rgba(255,255,255,.18);
+  border-radius:8px;padding:7px 8px;
+  display:flex;align-items:center;gap:7px;
+}
+.ph-ico{font-size:.9rem;flex-shrink:0;}
+.ph-line{flex:1;height:4px;background:rgba(255,255,255,.4);border-radius:2px;}
+.ph-line.short{max-width:55%;}
+.ph-line.xshort{max-width:35%;}
+
+.ph-highlight{
+  background:rgba(255,255,255,.32);
+  border:1.5px solid rgba(255,255,255,.6);
+  animation:ph-blink 2s ease-in-out infinite;
+}
+@keyframes ph-blink{0%,100%{background:rgba(255,255,255,.32)}50%{background:rgba(255,255,255,.52)}}
+
+.ph-add{
+  background:rgba(255,255,255,.1);
+  border:1.5px dashed rgba(255,255,255,.45);
+  border-radius:8px;margin:4px 10px 0;
+  height:30px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:900;color:rgba(255,255,255,.7);gap:5px;
+  animation:ph-pulse 2.5s ease-in-out infinite;
+}
+@keyframes ph-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.s2-body{
+  flex:1;
+  padding:20px 24px 16px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+}
+.s2-tag{
+  font-size:.7rem;font-weight:900;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--teal);margin-bottom:6px;
+}
+.s2-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.3rem,4.5vw,1.7rem);
+  font-weight:800;line-height:1.2;color:var(--ink);margin-bottom:10px;
+}
+.s2-title em{font-style:italic;color:var(--teal);}
+
+/* step list */
+.steps{display:flex;flex-direction:column;gap:8px;}
+.step{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--white);
+  border-radius:16px;padding:12px 14px;
+  border:2px solid var(--border);
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+  animation:step-in .5s ease both;
+}
+.step.lit{
+  border-color:var(--teal-lt);
+  box-shadow:0 4px 20px rgba(37,136,122,.2);
+  transform:translateX(4px);
+}
+@keyframes step-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.step:nth-child(1){animation-delay:.1s}
+.step:nth-child(2){animation-delay:.2s}
+.step:nth-child(3){animation-delay:.3s}
+.step:nth-child(4){animation-delay:.4s}
+
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--teal);color:white;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;font-weight:900;flex-shrink:0;
+}
+.step.lit .step-num{background:var(--teal-dk);}
+.step-content{}
+.step-head{font-size:.88rem;font-weight:900;color:var(--ink);line-height:1.2;}
+.step-sub{font-size:.76rem;color:var(--ink3);margin-top:2px;line-height:1.4;}
+
+/* ═══ SCREEN 3 — EMERGENCY BUTTON ════════════════════════════════ */
+.s3{background:#FFF0F0;}
+.s3-top{
+  background:linear-gradient(155deg,#D43030 0%,#A01818 60%,#6A0808 100%);
+  flex:0 0 42%;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.s3-top::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.06);top:-80px;right:-60px;}
+.s3-top::after{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-40px;left:-25px;}
+
+/* SOS button mockup */
+.sos-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  position:relative;z-index:3;
+}
+.sos-btn{
+  width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#FF6060,#D43030 55%,#8A0808);
+  border:4px solid rgba(255,255,255,.55);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:
+    0 0 0 10px rgba(212,48,48,.3),
+    0 0 0 22px rgba(212,48,48,.15),
+    0 20px 50px rgba(0,0,0,.4);
+  animation:sos-ring 2.2s ease-in-out infinite;
+  cursor:pointer;
+  transition:transform .15s;
+}
+.sos-btn:active{transform:scale(.96);}
+@keyframes sos-ring{
+  0%,100%{box-shadow:0 0 0 10px rgba(212,48,48,.3),0 0 0 22px rgba(212,48,48,.15),0 20px 50px rgba(0,0,0,.4)}
+  50%{box-shadow:0 0 0 18px rgba(212,48,48,.25),0 0 0 38px rgba(212,48,48,.1),0 20px 50px rgba(0,0,0,.4)}
+}
+.sos-icon{font-size:2.4rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));display:block;}
+.sos-label{font-size:.68rem;font-weight:900;color:rgba(255,255,255,.9);letter-spacing:.5px;margin-top:3px;}
+
+.contact-row{
+  display:flex;gap:10px;
+}
+.contact-card{
+  background:rgba(255,255,255,.18);
+  border:1.5px solid rgba(255,255,255,.35);
+  border-radius:14px;
+  padding:10px 12px;
+  text-align:center;
+  min-width:72px;
+}
+.cc-ico{font-size:1.3rem;display:block;margin-bottom:4px;}
+.cc-lbl{font-size:.65rem;font-weight:900;color:rgba(255,255,255,.85);}
+
+.s3-body{
+  flex:1;
+  padding:20px 24px 16px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+}
+.s3-tag{
+  font-size:.7rem;font-weight:900;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--red);margin-bottom:6px;
+}
+.s3-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.3rem,4.5vw,1.7rem);
+  font-weight:800;line-height:1.2;color:var(--ink);margin-bottom:10px;
+}
+.s3-title em{font-style:italic;color:var(--red);}
+
+.info-cards{display:flex;flex-direction:column;gap:8px;}
+.info-card{
+  background:var(--white);
+  border-radius:16px;padding:12px 14px;
+  border:2px solid var(--border);
+  display:flex;align-items:flex-start;gap:11px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+  animation:step-in .5s ease both;
+}
+.info-card:nth-child(1){animation-delay:.1s;border-left:4px solid var(--red);}
+.info-card:nth-child(2){animation-delay:.2s;border-left:4px solid #E06020;}
+.info-card:nth-child(3){animation-delay:.3s;border-left:4px solid var(--green);}
+.ic-ico{font-size:1.4rem;flex-shrink:0;margin-top:1px;}
+.ic-head{font-size:.88rem;font-weight:900;color:var(--ink);line-height:1.2;}
+.ic-sub{font-size:.76rem;color:var(--ink3);margin-top:2px;line-height:1.4;}
+
+/* ═══ SHARED FOOTER ══════════════════════════════════════════════ */
+.footer{
+  flex-shrink:0;
+  padding:14px 24px 20px;
+  background:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.dots{display:flex;gap:8px;align-items:center;}
+.dot{
+  width:8px;height:8px;border-radius:4px;
+  background:var(--border);
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+.dot.on{width:28px;background:var(--sun);}
+.dot.s2on{width:28px;background:var(--teal);}
+.dot.s3on{width:28px;background:var(--red);}
+
+.btn-row{display:flex;gap:10px;width:100%;max-width:360px;}
+.btn-back{
+  padding:14px 18px;
+  border:2.5px solid var(--border);border-radius:18px;
+  background:none;
+  font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;
+  color:var(--ink3);cursor:pointer;transition:all .18s;
+  white-space:nowrap;
+}
+.btn-back:hover{background:var(--border);}
+.btn-next{
+  flex:1;padding:14px;
+  border:none;border-radius:18px;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;
+  color:white;cursor:pointer;
+  background:linear-gradient(135deg,var(--sun),var(--sun-dk));
+  box-shadow:0 4px 18px rgba(232,129,58,.42);
+  transition:all .18s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 7px 24px rgba(232,129,58,.52);}
+.btn-next:active{transform:translateY(0);}
+.btn-next.teal{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dk));
+  box-shadow:0 4px 18px rgba(37,136,122,.42);
+}
+.btn-next.teal:hover{box-shadow:0 7px 24px rgba(37,136,122,.52);}
+.btn-next.red-btn{
+  background:linear-gradient(135deg,var(--red),var(--red-dk));
+  box-shadow:0 4px 18px rgba(212,48,48,.42);
+}
+.btn-next.green-btn{
+  background:linear-gradient(135deg,var(--green),#1A7A40);
+  box-shadow:0 4px 18px rgba(39,160,87,.42);
+}
+
+/* ═══ SWIPE & TOUCH HINT ════════════════════════════════════════ */
+.swipe-hint{
+  font-size:.72rem;font-weight:700;color:var(--ink3);
+  display:flex;align-items:center;gap:5px;
+  animation:hint-fade 3s ease 2s forwards;
+}
+@keyframes hint-fade{0%{opacity:1}100%{opacity:0;pointer-events:none}}
+.hint-arrow{animation:hint-move 1.2s ease-in-out infinite;}
+@keyframes hint-move{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+
+/* ═══ COMPLETION OVERLAY ════════════════════════════════════════ */
+.done-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(150deg,#25887A,#165F55,#0C3D36);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:36px 28px;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+.done-overlay.show{opacity:1;pointer-events:all;}
+.done-big{font-size:5rem;margin-bottom:16px;animation:done-bounce .8s cubic-bezier(.36,.07,.19,.97) .2s both;}
+@keyframes done-bounce{0%,100%{transform:scale(1)}30%{transform:scale(1.25)}60%{transform:scale(.92)}}
+.done-title{
+  font-family:'Playfair Display',serif;
+  font-size:2.1rem;font-weight:900;color:white;
+  line-height:1.2;margin-bottom:10px;
+}
+.done-sub{font-size:1rem;color:rgba(255,255,255,.78);line-height:1.6;max-width:300px;margin-bottom:32px;}
+.done-btn{
+  background:white;color:var(--teal-dk);border:none;
+  border-radius:18px;padding:16px 36px;
+  font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;
+  cursor:pointer;box-shadow:0 6px 28px rgba(0,0,0,.25);
+  transition:transform .18s;
+}
+.done-btn:hover{transform:translateY(-2px);}
+
+/* confetti */
+.conf-piece{
+  position:fixed;border-radius:2px;pointer-events:none;
+  animation:conf-fall linear both;z-index:1000;
+}
+@keyframes conf-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* ═══ STEP HIGHLIGHT ANIMATION (screen 2) ════════════════════════ */
+/* stepped via JS class toggling */
+
+/* ═══ RESPONSIVE SAFETY ════════════════════════════════════════════ */
+@media(max-height:600px){
+  .s1-sky{height:48%;}
+  .s2-body,.s3-body{padding:14px 20px 10px;}
+  .step,.info-card{padding:9px 12px;}
+  .step-head,.ic-head{font-size:.82rem;}
+  .s2-title,.s3-title{font-size:1.25rem;margin-bottom:7px;}
+  .footer{padding:10px 20px 14px;gap:9px;}
+  .btn-next,.btn-back{padding:12px 16px;}
+}
+@media(max-height:500px){
+  .s2-top,.s3-top{flex:0 0 36%;}
+  .steps,.info-cards{gap:5px;}
+  .step,.info-card{padding:7px 10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE STAGE
+══════════════════════════════════════════════ -->
+<div class="stage" id="stage">
+
+  <!-- ─── SCREEN 1: WELCOME ────────────────────── -->
+  <div class="screen s1">
+    <!-- sky -->
+    <div class="s1-sky">
+      <div class="sun-rays"></div>
+      <div class="sun-circle">☀️</div>
+    </div>
+
+    <!-- logo band (positioned over sky/body boundary) -->
+    <div class="s1-logo-band">
+      <div class="s1-logo-name">Saarthi</div>
+      <div class="s1-logo-tag">Your Trusted Daily Companion</div>
+    </div>
+
+    <!-- body content -->
+    <div class="s1-body">
+      <div>
+        <div class="s1-headline">
+          Simple. Clear.<br/><em>Made for You.</em>
+        </div>
+        <div class="s1-desc">
+          This short guide will show you exactly how to set a daily reminder and use the Emergency button — in just 2 easy steps.
+        </div>
+        <div class="s1-chips">
+          <span class="chip">📋 Set Reminders</span>
+          <span class="chip">🆘 Emergency Help</span>
+          <span class="chip">⏱ 1 Minute Read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="swipe-hint"><span>Swipe to start</span><span class="hint-arrow">→</span></div>
+      <div class="dots">
+        <div class="dot on" onclick="goTo(0)"></div>
+        <div class="dot" onclick="goTo(1)"></div>
+        <div class="dot" onclick="goTo(2)"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-next" onclick="goTo(1)">Let's Begin &nbsp;→</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SCREEN 2: SET A REMINDER ─────────────── -->
+  <div class="screen s2">
+    <div class="s2-top">
+      <!-- animated phone -->
+      <div class="phone">
+        <div class="phone-bar"></div>
+        <div class="phone-inner">
+          <div class="ph-row ph-highlight" id="ph-reminder-row">
+            <span class="ph-ico">💊</span>
+            <div class="ph-line"></div>
+          </div>
+          <div class="ph-row">
+            <span class="ph-ico">🚶</span>
+            <div class="ph-line"></div>
+          </div>
+          <div class="ph-row">
+            <span class="ph-ico">🍎</span>
+            <div class="ph-line short"></div>
+          </div>
+          <div class="ph-row">
+            <span class="ph-ico">💧</span>
+            <div class="ph-line short"></div>
+          </div>
+        </div>
+        <div class="ph-add" id="ph-add-btn">＋ &nbsp;Add Reminder</div>
+      </div>
+    </div>
+
+    <div class="s2-body">
+      <div>
+        <div class="s2-tag">📋 Step 1 of 2</div>
+        <div class="s2-title">How to Set a<br/><em>Daily Reminder</em></div>
+        <div class="steps" id="steps2">
+          <div class="step lit" id="step-1">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-head">Tap the Tasks tab at the bottom</div>
+              <div class="step-sub">Look for the 📋 icon in the menu bar</div>
+            </div>
+          </div>
+          <div class="step" id="step-2">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-head">Tap "+ Add New Reminder"</div>
+              <div class="step-sub">The green button at the bottom of the list</div>
+            </div>
+          </div>
+          <div class="step" id="step-3">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-head">Type the name &amp; set the time</div>
+              <div class="step-sub">e.g. "Evening Medicine" at 7:00 PM</div>
+            </div>
+          </div>
+          <div class="step" id="step-4">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-head">Tap "Save Reminder" — done! ✓</div>
+              <div class="step-sub">It repeats every day automatically</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="dots">
+        <div class="dot" onclick="goTo(0)"></div>
+        <div class="dot s2on" onclick="goTo(1)"></div>
+        <div class="dot" onclick="goTo(2)"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goTo(0)">← Back</button>
+        <button class="btn-next teal" onclick="goTo(2)">Next &nbsp;→</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SCREEN 3: EMERGENCY BUTTON ───────────── -->
+  <div class="screen s3">
+    <div class="s3-top">
+      <div class="sos-wrap">
+        <div class="sos-btn" onclick="sosTap(this)">
+          <span class="sos-icon">🆘</span>
+          <span class="sos-label">EMERGENCY</span>
+        </div>
+        <div class="contact-row">
+          <div class="contact-card">
+            <span class="cc-ico">🚑</span>
+            <div class="cc-lbl">Ambulance</div>
+          </div>
+          <div class="contact-card">
+            <span class="cc-ico">👨</span>
+            <div class="cc-lbl">Family</div>
+          </div>
+          <div class="contact-card">
+            <span class="cc-ico">👩‍⚕️</span>
+            <div class="cc-lbl">Doctor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s3-body">
+      <div>
+        <div class="s3-tag">🆘 Step 2 of 2</div>
+        <div class="s3-title">Using the<br/><em>Emergency Button</em></div>
+        <div class="info-cards">
+          <div class="info-card">
+            <span class="ic-ico">👆</span>
+            <div>
+              <div class="ic-head">Find the red button at the top of the home screen</div>
+              <div class="ic-sub">It says "EMERGENCY" — always visible, always there</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <span class="ic-ico">📞</span>
+            <div>
+              <div class="ic-head">Tap it once to see your saved contacts</div>
+              <div class="ic-sub">Family, doctor, and ambulance will appear instantly</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <span class="ic-ico">✅</span>
+            <div>
+              <div class="ic-head">Tap any name to call them immediately</div>
+              <div class="ic-sub">No searching needed — one tap and it calls!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="dots">
+        <div class="dot" onclick="goTo(0)"></div>
+        <div class="dot" onclick="goTo(1)"></div>
+        <div class="dot s3on" onclick="goTo(2)"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goTo(1)">← Back</button>
+        <button class="btn-next green-btn" onclick="finish()">I'm Ready! 🌟</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<!-- ══ COMPLETION OVERLAY ══ -->
+<div class="done-overlay" id="doneOverlay">
+  <div class="done-big">🎉</div>
+  <div class="done-title">You're all set!</div>
+  <div class="done-sub">You now know how to set reminders and use the Emergency button. DayCare is ready for you!</div>
+  <button class="done-btn" onclick="openApp()">☀️ Open DayCare</button>
+</div>
+
+<script>
+/* ─── STATE ─────────────────────────────────────────────── */
+let cur = 0;
+const TOTAL = 3;
+
+/* ─── NAVIGATION ────────────────────────────────────────── */
+function goTo(idx) {
+  if (idx < 0 || idx >= TOTAL) return;
+  cur = idx;
+  document.getElementById('stage').style.transform = `translateX(-${idx * 100}%)`;
+  updateDots();
+  updateBtn();
+  if (idx === 1) startStepAnim();
+}
+
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.className = 'dot';
+    const active = (Math.floor(i / TOTAL) === 0 && i % TOTAL === cur) ||
+                   (i === cur);  // each screen has its own dot row of 3
+  });
+  // per-screen dot rows each have 3 dots; cur is 0-2
+  document.querySelectorAll('.dots').forEach(row => {
+    const dots = row.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.className = 'dot';
+      if (i === cur) {
+        if (cur === 0) d.className = 'dot on';
+        else if (cur === 1) d.className = 'dot s2on';
+        else d.className = 'dot s3on';
+      }
+    });
+  });
+}
+
+function updateBtn() {
+  // nothing dynamic needed — buttons are inline
+}
+
+/* ─── SWIPE ──────────────────────────────────────────────── */
+let tx = 0, ty = 0;
+document.addEventListener('touchstart', e => {
+  tx = e.touches[0].clientX;
+  ty = e.touches[0].clientY;
+}, {passive: true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > Math.abs(dy) + 10 && Math.abs(dx) > 38) {
+    if (dx < 0 && cur < TOTAL - 1) goTo(cur + 1);
+    if (dx > 0 && cur > 0) goTo(cur - 1);
+  }
+}, {passive: true});
+
+/* keyboard */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && cur < TOTAL - 1) goTo(cur + 1);
+  if (e.key === 'ArrowLeft'  && cur > 0) goTo(cur - 1);
+});
+
+/* ─── STEP ANIMATION (Screen 2) ─────────────────────────── */
+let stepTimer;
+function startStepAnim() {
+  clearInterval(stepTimer);
+  let active = 0;
+  const steps = [
+    document.getElementById('step-1'),
+    document.getElementById('step-2'),
+    document.getElementById('step-3'),
+    document.getElementById('step-4'),
+  ];
+  steps.forEach(s => s.classList.remove('lit'));
+  steps[0].classList.add('lit');
+  stepTimer = setInterval(() => {
+    steps[active].classList.remove('lit');
+    active = (active + 1) % steps.length;
+    steps[active].classList.add('lit');
+  }, 1600);
+}
+
+/* ─── SOS TAP FEEDBACK ──────────────────────────────────── */
+function sosTap(btn) {
+  btn.style.transform = 'scale(.93)';
+  setTimeout(() => btn.style.transform = '', 200);
+  // brief flash on cards
+  document.querySelectorAll('.contact-card').forEach((c, i) => {
+    setTimeout(() => {
+      c.style.background = 'rgba(255,255,255,.38)';
+      setTimeout(() => c.style.background = '', 400);
+    }, i * 120);
+  });
+}
+
+/* ─── CONFETTI ───────────────────────────────────────────── */
+const colors = ['#E8813A','#FFD700','#25887A','#27A057','#D43030','#7048A8','#FF6B6B','#4ECDC4'];
+function launchConfetti() {
+  for (let i = 0; i < 55; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() * 9 + 6;
+    p.className = 'conf-piece';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-20px;
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>.5?'50%':'3px'};
+      animation:conf-fall ${1.6 + Math.random()*2}s ${Math.random()*.7}s linear both;
+    `;
+    document.body.appendChild(p);
+  }
+  setTimeout(() => document.querySelectorAll('.conf-piece').forEach(p => p.remove()), 4000);
+}
+
+/* ─── FINISH ─────────────────────────────────────────────── */
+function finish() {
+  launchConfetti();
+  setTimeout(() => {
+    document.getElementById('doneOverlay').classList.add('show');
+  }, 300);
+}
+
+function openApp() {
+  // In a real app, redirect to home screen
+  alert('Opening DayCare home screen! 🌟\n\n(In the real app, this would navigate to the home screen.)');
+}
+
+/* ─── INIT ───────────────────────────────────────────────── */
+updateDots();
+</script>
+</body>
+</html>
